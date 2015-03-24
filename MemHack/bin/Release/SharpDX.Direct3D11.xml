@@ -2943,10 +2943,6 @@
             <summary>Constant ConstantBufferComponentBitCount.</summary>
             <unmanaged>D3D11_COMMONSHADER_CONSTANT_BUFFER_COMPONENT_BIT_COUNT</unmanaged>
         </member>
-        <member name="F:SharpDX.Direct3D11.CommonShaderStage.InputResourceRegisterReadsPerInst">
-            <summary>Constant InputResourceRegisterReadsPerInst.</summary>
-            <unmanaged>D3D11_COMMONSHADER_INPUT_RESOURCE_REGISTER_READS_PER_INST</unmanaged>
-        </member>
         <member name="F:SharpDX.Direct3D11.CommonShaderStage.TextureCoordRangeReductionMinimum">
             <summary>Constant TextureCoordRangeReductionMinimum.</summary>
             <unmanaged>D3D11_COMMONSHADER_TEXCOORD_RANGE_REDUCTION_MIN</unmanaged>
@@ -3002,6 +2998,10 @@
         <member name="F:SharpDX.Direct3D11.CommonShaderStage.InputResourceRegisterCount">
             <summary>Constant InputResourceRegisterCount.</summary>
             <unmanaged>D3D11_COMMONSHADER_INPUT_RESOURCE_REGISTER_COUNT</unmanaged>
+        </member>
+        <member name="F:SharpDX.Direct3D11.CommonShaderStage.InputResourceRegisterReadsPerInst">
+            <summary>Constant InputResourceRegisterReadsPerInst.</summary>
+            <unmanaged>D3D11_COMMONSHADER_INPUT_RESOURCE_REGISTER_READS_PER_INST</unmanaged>
         </member>
         <member name="F:SharpDX.Direct3D11.CommonShaderStage.ConstantBufferRegisterReadPorts">
             <summary>Constant ConstantBufferRegisterReadPorts.</summary>
@@ -3376,6 +3376,10 @@
             <summary>Constant ThreadGroupSharedMemoryRegisterReadsPerInst.</summary>
             <unmanaged>D3D11_CS_TGSM_REGISTER_READS_PER_INST</unmanaged>
         </member>
+        <member name="F:SharpDX.Direct3D11.ComputeShaderStage.ThreadGroupMaximumZ">
+            <summary>Constant ThreadGroupMaximumZ.</summary>
+            <unmanaged>D3D11_CS_THREAD_GROUP_MAX_Z</unmanaged>
+        </member>
         <member name="F:SharpDX.Direct3D11.ComputeShaderStage.ThreadGroupMinimumX">
             <summary>Constant ThreadGroupMinimumX.</summary>
             <unmanaged>D3D11_CS_THREAD_GROUP_MIN_X</unmanaged>
@@ -3395,10 +3399,6 @@
         <member name="F:SharpDX.Direct3D11.ComputeShaderStage.ThreadGroupMinimumZ">
             <summary>Constant ThreadGroupMinimumZ.</summary>
             <unmanaged>D3D11_CS_THREAD_GROUP_MIN_Z</unmanaged>
-        </member>
-        <member name="F:SharpDX.Direct3D11.ComputeShaderStage.ThreadGroupMaximumZ">
-            <summary>Constant ThreadGroupMaximumZ.</summary>
-            <unmanaged>D3D11_CS_THREAD_GROUP_MAX_Z</unmanaged>
         </member>
         <member name="M:SharpDX.Direct3D11.ComputeShaderStage.GetUnorderedAccessViews(System.Int32,System.Int32)">
             <summary>	
@@ -16396,25 +16396,6 @@
             <unmanaged>HRESULT D3DX11SaveTextureToMemory([In] ID3D11DeviceContext* pContext,[In] ID3D11Resource* pSrcTexture,[In] D3DX11_IMAGE_FILE_FORMAT DestFormat,[Out] ID3D10Blob** ppDestBuf,[In] unsigned int Flags)</unmanaged>	
             <unmanaged-short>D3DX11SaveTextureToMemory</unmanaged-short>	
         </member>
-        <member name="M:SharpDX.Direct3D11.D3DX11.ComputeNormalMap(SharpDX.Direct3D11.DeviceContext,SharpDX.Direct3D11.Texture2D,SharpDX.Direct3D11.NormalMapFlags,SharpDX.Direct3D11.Channel,System.Single,SharpDX.Direct3D11.Texture2D)">
-            <summary>	
-            <p><strong>Note</strong>??The D3DX (D3DX 9, D3DX 10, and D3DX 11) utility library is deprecated for Windows?8 and is not supported for Windows Store apps.</p><p><strong>Note</strong>??Instead of using this function, we recommend that you use the DirectXTex library, <strong>ComputeNormalMap</strong>. </p><p>Converts a height map into a normal map. The (x,y,z) components of each normal are mapped to the (r,g,b) channels of the output texture.</p>	
-            </summary>	
-            <param name="contextRef">No documentation.</param>	
-            <param name="srcTextureRef">No documentation.</param>	
-            <param name="flags">No documentation.</param>	
-            <param name="channel">No documentation.</param>	
-            <param name="amplitude">No documentation.</param>	
-            <param name="destTextureRef">No documentation.</param>	
-            <returns><p>If the function succeeds, the return value is <see cref="!:SharpDX.Direct3D9.ResultCode.Success"/>. If the function fails, the return value can be the following value: <see cref="!:SharpDX.Direct3D9.ResultCode.InvalidCall"/>.</p></returns>	
-            <remarks>	
-            <p>This method computes the normal by using the central difference with a kernel size of 3x3. RGB channels in the destination contain biased (x,y,z) components of the normal. The central differencing denominator is hardcoded to 2.0.</p>	
-            </remarks>	
-            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D3DX11ComputeNormalMap']/*"/>	
-            <msdn-id>ff476264</msdn-id>	
-            <unmanaged>HRESULT D3DX11ComputeNormalMap([In] ID3D11DeviceContext* pContext,[In] ID3D11Texture2D* pSrcTexture,[In] D3DX11_NORMALMAP_FLAG Flags,[In] D3DX11_CHANNEL_FLAG Channel,[In] float Amplitude,[In] ID3D11Texture2D* pDestTexture)</unmanaged>	
-            <unmanaged-short>D3DX11ComputeNormalMap</unmanaged-short>	
-        </member>
         <member name="M:SharpDX.Direct3D11.D3DX11.GetImageInfoFromResource(System.IntPtr,System.String,System.IntPtr,SharpDX.Direct3D11.ImageInformation@,SharpDX.Result@)">
             <summary>	
             <p><strong>Note</strong>??The D3DX (D3DX 9, D3DX 10, and D3DX 11) utility library is deprecated for Windows?8 and is not supported for Windows Store apps.</p><p><strong>Note</strong>??Instead of using this function, we recommend that you use resource functions, then use  DirectXTex library (tools), 	
@@ -16566,6 +16547,25 @@
             <msdn-id>ff476287</msdn-id>	
             <unmanaged>HRESULT D3DX11CreateTextureFromMemory([In] ID3D11Device* pDevice,[In] const void* pSrcData,[In] SIZE_T SrcDataSize,[In, Optional] D3DX11_IMAGE_LOAD_INFO* pLoadInfo,[In] ID3DX11ThreadPump* pPump,[Out] void** ppTexture,[Out] HRESULT* pHResult)</unmanaged>	
             <unmanaged-short>D3DX11CreateTextureFromMemory</unmanaged-short>	
+        </member>
+        <member name="M:SharpDX.Direct3D11.D3DX11.ComputeNormalMap(SharpDX.Direct3D11.DeviceContext,SharpDX.Direct3D11.Texture2D,SharpDX.Direct3D11.NormalMapFlags,SharpDX.Direct3D11.Channel,System.Single,SharpDX.Direct3D11.Texture2D)">
+            <summary>	
+            <p><strong>Note</strong>??The D3DX (D3DX 9, D3DX 10, and D3DX 11) utility library is deprecated for Windows?8 and is not supported for Windows Store apps.</p><p><strong>Note</strong>??Instead of using this function, we recommend that you use the DirectXTex library, <strong>ComputeNormalMap</strong>. </p><p>Converts a height map into a normal map. The (x,y,z) components of each normal are mapped to the (r,g,b) channels of the output texture.</p>	
+            </summary>	
+            <param name="contextRef">No documentation.</param>	
+            <param name="srcTextureRef">No documentation.</param>	
+            <param name="flags">No documentation.</param>	
+            <param name="channel">No documentation.</param>	
+            <param name="amplitude">No documentation.</param>	
+            <param name="destTextureRef">No documentation.</param>	
+            <returns><p>If the function succeeds, the return value is <see cref="!:SharpDX.Direct3D9.ResultCode.Success"/>. If the function fails, the return value can be the following value: <see cref="!:SharpDX.Direct3D9.ResultCode.InvalidCall"/>.</p></returns>	
+            <remarks>	
+            <p>This method computes the normal by using the central difference with a kernel size of 3x3. RGB channels in the destination contain biased (x,y,z) components of the normal. The central differencing denominator is hardcoded to 2.0.</p>	
+            </remarks>	
+            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D3DX11ComputeNormalMap']/*"/>	
+            <msdn-id>ff476264</msdn-id>	
+            <unmanaged>HRESULT D3DX11ComputeNormalMap([In] ID3D11DeviceContext* pContext,[In] ID3D11Texture2D* pSrcTexture,[In] D3DX11_NORMALMAP_FLAG Flags,[In] D3DX11_CHANNEL_FLAG Channel,[In] float Amplitude,[In] ID3D11Texture2D* pDestTexture)</unmanaged>	
+            <unmanaged-short>D3DX11ComputeNormalMap</unmanaged-short>	
         </member>
         <member name="M:SharpDX.Direct3D11.D3DX11.SaveTextureToFile(SharpDX.Direct3D11.DeviceContext,SharpDX.Direct3D11.Resource,SharpDX.Direct3D11.ImageFileFormat,System.String)">
             <summary>	
@@ -21129,6 +21129,27 @@
             <unmanaged>D3D11_TEX3D_RTV Texture3D</unmanaged>	
             <unmanaged-short>D3D11_TEX3D_RTV Texture3D</unmanaged-short>	
         </member>
+        <member name="T:SharpDX.Direct3D11.RenderTargetViewDescription.Texture2DMultisampledResource">
+            <summary>	
+            <p>Specifies the subresource from a multisampled 2D texture to use in a render-target view.</p>	
+            </summary>	
+            <remarks>	
+            <p>Since a multisampled 2D texture contains a single subresource, there is actually nothing to specify in <see cref="T:SharpDX.Direct3D11.RenderTargetViewDescription.Texture2DMultisampledResource"/>. Consequently, <strong>UnusedField_NothingToDefine</strong> is included so that this structure will compile in C.</p>	
+            </remarks>	
+            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D3D11_TEX2DMS_RTV']/*"/>	
+            <msdn-id>ff476237</msdn-id>	
+            <unmanaged>D3D11_TEX2DMS_RTV</unmanaged>	
+            <unmanaged-short>D3D11_TEX2DMS_RTV</unmanaged-short>	
+        </member>
+        <member name="F:SharpDX.Direct3D11.RenderTargetViewDescription.Texture2DMultisampledResource.UnusedFieldNothingToDefine">
+            <summary>	
+            <dd> <p>Integer of any value. See remarks.</p> </dd>	
+            </summary>	
+            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D3D11_TEX2DMS_RTV::UnusedField_NothingToDefine']/*"/>	
+            <msdn-id>ff476237</msdn-id>	
+            <unmanaged>unsigned int UnusedField_NothingToDefine</unmanaged>	
+            <unmanaged-short>unsigned int UnusedField_NothingToDefine</unmanaged-short>	
+        </member>
         <member name="T:SharpDX.Direct3D11.RenderTargetViewDescription.Texture2DMultisampledArrayResource">
             <summary>	
             <p>Specifies the subresources from a an array of multisampled 2D textures to use in a render-target view.</p>	
@@ -21179,27 +21200,6 @@
             <msdn-id>ff476230</msdn-id>	
             <unmanaged>unsigned int MipSlice</unmanaged>	
             <unmanaged-short>unsigned int MipSlice</unmanaged-short>	
-        </member>
-        <member name="T:SharpDX.Direct3D11.RenderTargetViewDescription.Texture2DMultisampledResource">
-            <summary>	
-            <p>Specifies the subresource from a multisampled 2D texture to use in a render-target view.</p>	
-            </summary>	
-            <remarks>	
-            <p>Since a multisampled 2D texture contains a single subresource, there is actually nothing to specify in <see cref="T:SharpDX.Direct3D11.RenderTargetViewDescription.Texture2DMultisampledResource"/>. Consequently, <strong>UnusedField_NothingToDefine</strong> is included so that this structure will compile in C.</p>	
-            </remarks>	
-            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D3D11_TEX2DMS_RTV']/*"/>	
-            <msdn-id>ff476237</msdn-id>	
-            <unmanaged>D3D11_TEX2DMS_RTV</unmanaged>	
-            <unmanaged-short>D3D11_TEX2DMS_RTV</unmanaged-short>	
-        </member>
-        <member name="F:SharpDX.Direct3D11.RenderTargetViewDescription.Texture2DMultisampledResource.UnusedFieldNothingToDefine">
-            <summary>	
-            <dd> <p>Integer of any value. See remarks.</p> </dd>	
-            </summary>	
-            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D3D11_TEX2DMS_RTV::UnusedField_NothingToDefine']/*"/>	
-            <msdn-id>ff476237</msdn-id>	
-            <unmanaged>unsigned int UnusedField_NothingToDefine</unmanaged>	
-            <unmanaged-short>unsigned int UnusedField_NothingToDefine</unmanaged-short>	
         </member>
         <member name="T:SharpDX.Direct3D11.RenderTargetViewDescription.Texture2DResource">
             <summary>	
@@ -21260,6 +21260,54 @@
             <msdn-id>ff476226</msdn-id>	
             <unmanaged>unsigned int ArraySize</unmanaged>	
             <unmanaged-short>unsigned int ArraySize</unmanaged-short>	
+        </member>
+        <member name="T:SharpDX.Direct3D11.RenderTargetViewDescription.BufferResource">
+            <summary>	
+            <p>Specifies the elements in a buffer resource to use in a render-target view.</p>	
+            </summary>	
+            <remarks>	
+            <p>A render-target view is a member of a render-target-view description (see <strong><see cref="T:SharpDX.Direct3D11.RenderTargetViewDescription"/></strong>). Create a render-target view by calling <strong><see cref="M:SharpDX.Direct3D11.Device.CreateRenderTargetView(SharpDX.Direct3D11.Resource,System.Nullable{SharpDX.Direct3D11.RenderTargetViewDescription},SharpDX.Direct3D11.RenderTargetView)"/></strong>.</p>	
+            </remarks>	
+            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D3D11_BUFFER_RTV']/*"/>	
+            <msdn-id>ff476093</msdn-id>	
+            <unmanaged>D3D11_BUFFER_RTV</unmanaged>	
+            <unmanaged-short>D3D11_BUFFER_RTV</unmanaged-short>	
+        </member>
+        <member name="F:SharpDX.Direct3D11.RenderTargetViewDescription.BufferResource.FirstElement">
+            <summary>	
+            <dd> <p>Number of bytes between the beginning of the buffer and the first element to access.</p> </dd>	
+            </summary>	
+            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D3D11_BUFFER_RTV::FirstElement']/*"/>	
+            <msdn-id>ff476093</msdn-id>	
+            <unmanaged>unsigned int FirstElement</unmanaged>	
+            <unmanaged-short>unsigned int FirstElement</unmanaged-short>	
+        </member>
+        <member name="F:SharpDX.Direct3D11.RenderTargetViewDescription.BufferResource.ElementOffset">
+            <summary>	
+            <dd> <p>The offset of the first element in the view to access, relative to element 0.</p> </dd>	
+            </summary>	
+            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D3D11_BUFFER_RTV::ElementOffset']/*"/>	
+            <msdn-id>ff476093</msdn-id>	
+            <unmanaged>unsigned int ElementOffset</unmanaged>	
+            <unmanaged-short>unsigned int ElementOffset</unmanaged-short>	
+        </member>
+        <member name="F:SharpDX.Direct3D11.RenderTargetViewDescription.BufferResource.ElementCount">
+            <summary>	
+            <dd> <p>The total number of elements in the view.</p> </dd>	
+            </summary>	
+            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D3D11_BUFFER_RTV::NumElements']/*"/>	
+            <msdn-id>ff476093</msdn-id>	
+            <unmanaged>unsigned int NumElements</unmanaged>	
+            <unmanaged-short>unsigned int NumElements</unmanaged-short>	
+        </member>
+        <member name="F:SharpDX.Direct3D11.RenderTargetViewDescription.BufferResource.ElementWidth">
+            <summary>	
+            <dd> <p>The width of each element (in bytes). This can be determined from the format stored in the render-target-view description.</p> </dd>	
+            </summary>	
+            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D3D11_BUFFER_RTV::ElementWidth']/*"/>	
+            <msdn-id>ff476093</msdn-id>	
+            <unmanaged>unsigned int ElementWidth</unmanaged>	
+            <unmanaged-short>unsigned int ElementWidth</unmanaged-short>	
         </member>
         <member name="T:SharpDX.Direct3D11.RenderTargetViewDescription.Texture3DResource">
             <summary>	
@@ -21338,54 +21386,6 @@
             <msdn-id>ff476240</msdn-id>	
             <unmanaged>unsigned int ArraySize</unmanaged>	
             <unmanaged-short>unsigned int ArraySize</unmanaged-short>	
-        </member>
-        <member name="T:SharpDX.Direct3D11.RenderTargetViewDescription.BufferResource">
-            <summary>	
-            <p>Specifies the elements in a buffer resource to use in a render-target view.</p>	
-            </summary>	
-            <remarks>	
-            <p>A render-target view is a member of a render-target-view description (see <strong><see cref="T:SharpDX.Direct3D11.RenderTargetViewDescription"/></strong>). Create a render-target view by calling <strong><see cref="M:SharpDX.Direct3D11.Device.CreateRenderTargetView(SharpDX.Direct3D11.Resource,System.Nullable{SharpDX.Direct3D11.RenderTargetViewDescription},SharpDX.Direct3D11.RenderTargetView)"/></strong>.</p>	
-            </remarks>	
-            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D3D11_BUFFER_RTV']/*"/>	
-            <msdn-id>ff476093</msdn-id>	
-            <unmanaged>D3D11_BUFFER_RTV</unmanaged>	
-            <unmanaged-short>D3D11_BUFFER_RTV</unmanaged-short>	
-        </member>
-        <member name="F:SharpDX.Direct3D11.RenderTargetViewDescription.BufferResource.FirstElement">
-            <summary>	
-            <dd> <p>Number of bytes between the beginning of the buffer and the first element to access.</p> </dd>	
-            </summary>	
-            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D3D11_BUFFER_RTV::FirstElement']/*"/>	
-            <msdn-id>ff476093</msdn-id>	
-            <unmanaged>unsigned int FirstElement</unmanaged>	
-            <unmanaged-short>unsigned int FirstElement</unmanaged-short>	
-        </member>
-        <member name="F:SharpDX.Direct3D11.RenderTargetViewDescription.BufferResource.ElementOffset">
-            <summary>	
-            <dd> <p>The offset of the first element in the view to access, relative to element 0.</p> </dd>	
-            </summary>	
-            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D3D11_BUFFER_RTV::ElementOffset']/*"/>	
-            <msdn-id>ff476093</msdn-id>	
-            <unmanaged>unsigned int ElementOffset</unmanaged>	
-            <unmanaged-short>unsigned int ElementOffset</unmanaged-short>	
-        </member>
-        <member name="F:SharpDX.Direct3D11.RenderTargetViewDescription.BufferResource.ElementCount">
-            <summary>	
-            <dd> <p>The total number of elements in the view.</p> </dd>	
-            </summary>	
-            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D3D11_BUFFER_RTV::NumElements']/*"/>	
-            <msdn-id>ff476093</msdn-id>	
-            <unmanaged>unsigned int NumElements</unmanaged>	
-            <unmanaged-short>unsigned int NumElements</unmanaged-short>	
-        </member>
-        <member name="F:SharpDX.Direct3D11.RenderTargetViewDescription.BufferResource.ElementWidth">
-            <summary>	
-            <dd> <p>The width of each element (in bytes). This can be determined from the format stored in the render-target-view description.</p> </dd>	
-            </summary>	
-            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D3D11_BUFFER_RTV::ElementWidth']/*"/>	
-            <msdn-id>ff476093</msdn-id>	
-            <unmanaged>unsigned int ElementWidth</unmanaged>	
-            <unmanaged-short>unsigned int ElementWidth</unmanaged-short>	
         </member>
         <member name="T:SharpDX.Direct3D11.ResourceRegion">
             <summary>	
@@ -21788,6 +21788,36 @@
             <unmanaged>unsigned int MipLevels</unmanaged>	
             <unmanaged-short>unsigned int MipLevels</unmanaged-short>	
         </member>
+        <member name="T:SharpDX.Direct3D11.ShaderResourceViewDescription.Texture1DResource">
+            <summary>	
+            <p>Specifies the subresource from a 1D texture to use in a shader-resource view.</p>	
+            </summary>	
+            <remarks>	
+            <p>This structure is one member of a shader-resource-view description (see <strong><see cref="T:SharpDX.Direct3D11.ShaderResourceViewDescription"/></strong>).</p><p>As an example, assuming <strong>MostDetailedMip</strong> = 6 and <strong>MipLevels</strong> = 2, the view will have access to 2 mipmap levels, 6 and 7, of the original texture for which <strong><see cref="M:SharpDX.Direct3D11.Device.CreateShaderResourceView(SharpDX.Direct3D11.Resource,System.Nullable{SharpDX.Direct3D11.ShaderResourceViewDescription},SharpDX.Direct3D11.ShaderResourceView)"/></strong> creates the view. In this situation, <strong>MostDetailedMip</strong> is greater than the <strong>MipLevels</strong> in the view. However, <strong>MostDetailedMip</strong> is not greater than the <strong>MipLevels</strong> in the original resource.</p>	
+            </remarks>	
+            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D3D11_TEX1D_SRV']/*"/>	
+            <msdn-id>ff476231</msdn-id>	
+            <unmanaged>D3D11_TEX1D_SRV</unmanaged>	
+            <unmanaged-short>D3D11_TEX1D_SRV</unmanaged-short>	
+        </member>
+        <member name="F:SharpDX.Direct3D11.ShaderResourceViewDescription.Texture1DResource.MostDetailedMip">
+            <summary>	
+            <dd> <p>Index of the most detailed mipmap level to use; this number is between 0 and <strong>MipLevels</strong> (from the original Texture1D for which <strong><see cref="M:SharpDX.Direct3D11.Device.CreateShaderResourceView(SharpDX.Direct3D11.Resource,System.Nullable{SharpDX.Direct3D11.ShaderResourceViewDescription},SharpDX.Direct3D11.ShaderResourceView)"/></strong> creates a view) -1.</p> </dd>	
+            </summary>	
+            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D3D11_TEX1D_SRV::MostDetailedMip']/*"/>	
+            <msdn-id>ff476231</msdn-id>	
+            <unmanaged>unsigned int MostDetailedMip</unmanaged>	
+            <unmanaged-short>unsigned int MostDetailedMip</unmanaged-short>	
+        </member>
+        <member name="F:SharpDX.Direct3D11.ShaderResourceViewDescription.Texture1DResource.MipLevels">
+            <summary>	
+            <dd> <p>The maximum number of mipmap levels for the view  of the texture. See the remarks.</p> <p>Set to -1 to indicate all the mipmap levels from <strong>MostDetailedMip</strong> on down to least detailed.</p> </dd>	
+            </summary>	
+            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D3D11_TEX1D_SRV::MipLevels']/*"/>	
+            <msdn-id>ff476231</msdn-id>	
+            <unmanaged>unsigned int MipLevels</unmanaged>	
+            <unmanaged-short>unsigned int MipLevels</unmanaged-short>	
+        </member>
         <member name="T:SharpDX.Direct3D11.ShaderResourceViewDescription.Texture2DMultisampledResource">
             <summary>	
             <p>Specifies the subresources from a multisampled 2D texture to use in a shader-resource view.</p>	
@@ -21964,36 +21994,6 @@
             <msdn-id>ff476227</msdn-id>	
             <unmanaged>unsigned int ArraySize</unmanaged>	
             <unmanaged-short>unsigned int ArraySize</unmanaged-short>	
-        </member>
-        <member name="T:SharpDX.Direct3D11.ShaderResourceViewDescription.Texture1DResource">
-            <summary>	
-            <p>Specifies the subresource from a 1D texture to use in a shader-resource view.</p>	
-            </summary>	
-            <remarks>	
-            <p>This structure is one member of a shader-resource-view description (see <strong><see cref="T:SharpDX.Direct3D11.ShaderResourceViewDescription"/></strong>).</p><p>As an example, assuming <strong>MostDetailedMip</strong> = 6 and <strong>MipLevels</strong> = 2, the view will have access to 2 mipmap levels, 6 and 7, of the original texture for which <strong><see cref="M:SharpDX.Direct3D11.Device.CreateShaderResourceView(SharpDX.Direct3D11.Resource,System.Nullable{SharpDX.Direct3D11.ShaderResourceViewDescription},SharpDX.Direct3D11.ShaderResourceView)"/></strong> creates the view. In this situation, <strong>MostDetailedMip</strong> is greater than the <strong>MipLevels</strong> in the view. However, <strong>MostDetailedMip</strong> is not greater than the <strong>MipLevels</strong> in the original resource.</p>	
-            </remarks>	
-            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D3D11_TEX1D_SRV']/*"/>	
-            <msdn-id>ff476231</msdn-id>	
-            <unmanaged>D3D11_TEX1D_SRV</unmanaged>	
-            <unmanaged-short>D3D11_TEX1D_SRV</unmanaged-short>	
-        </member>
-        <member name="F:SharpDX.Direct3D11.ShaderResourceViewDescription.Texture1DResource.MostDetailedMip">
-            <summary>	
-            <dd> <p>Index of the most detailed mipmap level to use; this number is between 0 and <strong>MipLevels</strong> (from the original Texture1D for which <strong><see cref="M:SharpDX.Direct3D11.Device.CreateShaderResourceView(SharpDX.Direct3D11.Resource,System.Nullable{SharpDX.Direct3D11.ShaderResourceViewDescription},SharpDX.Direct3D11.ShaderResourceView)"/></strong> creates a view) -1.</p> </dd>	
-            </summary>	
-            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D3D11_TEX1D_SRV::MostDetailedMip']/*"/>	
-            <msdn-id>ff476231</msdn-id>	
-            <unmanaged>unsigned int MostDetailedMip</unmanaged>	
-            <unmanaged-short>unsigned int MostDetailedMip</unmanaged-short>	
-        </member>
-        <member name="F:SharpDX.Direct3D11.ShaderResourceViewDescription.Texture1DResource.MipLevels">
-            <summary>	
-            <dd> <p>The maximum number of mipmap levels for the view  of the texture. See the remarks.</p> <p>Set to -1 to indicate all the mipmap levels from <strong>MostDetailedMip</strong> on down to least detailed.</p> </dd>	
-            </summary>	
-            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D3D11_TEX1D_SRV::MipLevels']/*"/>	
-            <msdn-id>ff476231</msdn-id>	
-            <unmanaged>unsigned int MipLevels</unmanaged>	
-            <unmanaged-short>unsigned int MipLevels</unmanaged-short>	
         </member>
         <member name="T:SharpDX.Direct3D11.ShaderResourceViewDescription.Texture2DArrayResource">
             <summary>	
@@ -22769,27 +22769,6 @@
             <unmanaged>D3D11_BUFFER_UAV_FLAG Flags</unmanaged>	
             <unmanaged-short>D3D11_BUFFER_UAV_FLAG Flags</unmanaged-short>	
         </member>
-        <member name="T:SharpDX.Direct3D11.UnorderedAccessViewDescription.Texture1DResource">
-            <summary>	
-            <p>Describes a unordered-access 1D texture resource.</p>	
-            </summary>	
-            <remarks>	
-            <p>This structure is used by a <strong><see cref="T:SharpDX.Direct3D11.UnorderedAccessViewDescription"/></strong>.</p>	
-            </remarks>	
-            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D3D11_TEX1D_UAV']/*"/>	
-            <msdn-id>ff476232</msdn-id>	
-            <unmanaged>D3D11_TEX1D_UAV</unmanaged>	
-            <unmanaged-short>D3D11_TEX1D_UAV</unmanaged-short>	
-        </member>
-        <member name="F:SharpDX.Direct3D11.UnorderedAccessViewDescription.Texture1DResource.MipSlice">
-            <summary>	
-            <dd> <p>The mipmap slice index.</p> </dd>	
-            </summary>	
-            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D3D11_TEX1D_UAV::MipSlice']/*"/>	
-            <msdn-id>ff476232</msdn-id>	
-            <unmanaged>unsigned int MipSlice</unmanaged>	
-            <unmanaged-short>unsigned int MipSlice</unmanaged-short>	
-        </member>
         <member name="T:SharpDX.Direct3D11.UnorderedAccessViewDescription.Texture2DResource">
             <summary>	
             <p>Describes a unordered-access 2D texture resource.</p>	
@@ -22808,6 +22787,27 @@
             </summary>	
             <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D3D11_TEX2D_UAV::MipSlice']/*"/>	
             <msdn-id>ff476246</msdn-id>	
+            <unmanaged>unsigned int MipSlice</unmanaged>	
+            <unmanaged-short>unsigned int MipSlice</unmanaged-short>	
+        </member>
+        <member name="T:SharpDX.Direct3D11.UnorderedAccessViewDescription.Texture1DResource">
+            <summary>	
+            <p>Describes a unordered-access 1D texture resource.</p>	
+            </summary>	
+            <remarks>	
+            <p>This structure is used by a <strong><see cref="T:SharpDX.Direct3D11.UnorderedAccessViewDescription"/></strong>.</p>	
+            </remarks>	
+            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D3D11_TEX1D_UAV']/*"/>	
+            <msdn-id>ff476232</msdn-id>	
+            <unmanaged>D3D11_TEX1D_UAV</unmanaged>	
+            <unmanaged-short>D3D11_TEX1D_UAV</unmanaged-short>	
+        </member>
+        <member name="F:SharpDX.Direct3D11.UnorderedAccessViewDescription.Texture1DResource.MipSlice">
+            <summary>	
+            <dd> <p>The mipmap slice index.</p> </dd>	
+            </summary>	
+            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D3D11_TEX1D_UAV::MipSlice']/*"/>	
+            <msdn-id>ff476232</msdn-id>	
             <unmanaged>unsigned int MipSlice</unmanaged>	
             <unmanaged-short>unsigned int MipSlice</unmanaged-short>	
         </member>

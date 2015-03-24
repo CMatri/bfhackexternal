@@ -2507,10 +2507,6 @@
             <summary>Constant DeviceReset.</summary>
             <unmanaged>DXGI_ERROR_DEVICE_RESET</unmanaged>
         </member>
-        <member name="F:SharpDX.DXGI.ResultCode.NotFound">
-            <summary>Constant NotFound.</summary>
-            <unmanaged>DXGI_ERROR_NOT_FOUND</unmanaged>
-        </member>
         <member name="F:SharpDX.DXGI.ResultCode.DriverInternalError">
             <summary>Constant DriverInternalError.</summary>
             <unmanaged>DXGI_ERROR_DRIVER_INTERNAL_ERROR</unmanaged>
@@ -2518,6 +2514,10 @@
         <member name="F:SharpDX.DXGI.ResultCode.InvalidCall">
             <summary>Constant InvalidCall.</summary>
             <unmanaged>DXGI_ERROR_INVALID_CALL</unmanaged>
+        </member>
+        <member name="F:SharpDX.DXGI.ResultCode.NotFound">
+            <summary>Constant NotFound.</summary>
+            <unmanaged>DXGI_ERROR_NOT_FOUND</unmanaged>
         </member>
         <member name="F:SharpDX.DXGI.ResultCode.WasStillDrawing">
             <summary>Constant WasStillDrawing.</summary>

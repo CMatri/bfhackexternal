@@ -83,6 +83,11 @@ namespace MemLibs
             return (float)Math.Sqrt((Space.X * Space.X) + (Space.Y * Space.Y) + (Space.Z * Space.Z));
         }
 
+        public float VecLength()
+        {
+            return (float)Math.Sqrt(X * X + Y * Y + Z * Z);
+        }
+
         public float GetLength(float _X, float _Y, float _Z)
         {
             Vector3D Space = new Vector3D();

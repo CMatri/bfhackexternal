@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using MemLibs;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
+using SharpDX.IO;
+using SharpDX.WIC;
+using Bitmap = SharpDX.Direct2D1.Bitmap;
+using BitmapInterpolationMode = SharpDX.Direct2D1.BitmapInterpolationMode;
 using Matrix3x3 = SharpDX.Matrix3x3;
 
 namespace MemHack
@@ -160,19 +165,21 @@ namespace MemHack
         {
             if (complex)
             {
-                overlay.solidColorBrush.Color = new Color(0, 0, 0, 170);
-                overlay.device.DrawRectangle(new RectangleF((X - (Width / 2)) - 7f, Y - 2f, 14f, 4f), overlay.solidColorBrush);
-                overlay.device.DrawRectangle(new RectangleF((X + (Width / 2)) - 7f, Y - 2f, 14f, 4f), overlay.solidColorBrush);
-                overlay.device.DrawRectangle(new RectangleF(X - 2f, (Y - (Width / 2)) - 7f, 4f, 14f), overlay.solidColorBrush);
-                overlay.device.DrawRectangle(new RectangleF(X - 2f, (Y + (Width / 2)) - 7f, 4f, 14f), overlay.solidColorBrush);
-                overlay.solidColorBrush.Color = color;
-                overlay.device.DrawLine(new Vector2((X - (Width / 2)) - 6f, Y), new Vector2(X - 4f, Y), overlay.solidColorBrush);
-                overlay.device.DrawLine(new Vector2((X + (Width / 2)) + 6f, Y), new Vector2(X + 4f, Y), overlay.solidColorBrush);
-                overlay.device.DrawLine(new Vector2(X, (Y - (Height / 2)) - 6f), new Vector2(X, Y - 4f), overlay.solidColorBrush);
-                overlay.device.DrawLine(new Vector2(X, (Y + (Height / 2)) + 6f), new Vector2(X, Y + 4f), overlay.solidColorBrush);
+                //overlay.solidColorBrush.Color = new Color(0, 0, 0, 170);
+                //overlay.device.DrawRectangle(new RectangleF((X - (Width / 2)) - 7f, Y - 2f, 14f, 4f), overlay.solidColorBrush);
+                //overlay.device.DrawRectangle(new RectangleF((X + (Width / 2)) - 7f, Y - 2f, 14f, 4f), overlay.solidColorBrush);
+                //overlay.device.DrawRectangle(new RectangleF(X - 2f, (Y - (Width / 2)) - 7f, 4f, 14f), overlay.solidColorBrush);
+                //overlay.device.DrawRectangle(new RectangleF(X - 2f, (Y + (Width / 2)) - 7f, 4f, 14f), overlay.solidColorBrush);
+                //overlay.solidColorBrush.Color = color;
+                //overlay.device.DrawLine(new Vector2((X - (Width / 2)) - 6f, Y), new Vector2(X - 4f, Y), overlay.solidColorBrush);
+                //overlay.device.DrawLine(new Vector2((X + (Width / 2)) + 6f, Y), new Vector2(X + 4f, Y), overlay.solidColorBrush);
+                //overlay.device.DrawLine(new Vector2(X, (Y - (Height / 2)) - 6f), new Vector2(X, Y - 4f), overlay.solidColorBrush);
+                //overlay.device.DrawLine(new Vector2(X, (Y + (Height / 2)) + 6f), new Vector2(X, Y + 4f), overlay.solidColorBrush);
+                DrawBitmap(overlay.crosshair, overlay.MakeRectangle(overlay.Width / 2 - 32 / 2, overlay.Height / 2 - 32 / 2, 32, 32), 0);
             }
             else
             {
+                overlay.solidColorBrush.Color = color;
                 overlay.device.DrawLine(new Vector2(X - (Width / 2), Y), new Vector2(X + (Width / 2), Y), overlay.solidColorBrush);
                 overlay.device.DrawLine(new Vector2(X, Y - (Width / 2)), new Vector2(X, Y + (Width / 2)), overlay.solidColorBrush);
             }
@@ -582,6 +589,25 @@ namespace MemHack
             overlay.device.DrawLine(new Vector2(aabb.corners[4].X, aabb.corners[4].Y), new Vector2(aabb.corners[5].X, aabb.corners[5].Y), overlay.solidColorBrush);
             overlay.device.DrawLine(new Vector2(aabb.corners[1].X, aabb.corners[1].Y), new Vector2(aabb.corners[2].X, aabb.corners[2].Y), overlay.solidColorBrush);
             overlay.device.DrawLine(new Vector2(aabb.corners[6].X, aabb.corners[6].Y), new Vector2(aabb.corners[7].X, aabb.corners[7].Y), overlay.solidColorBrush);
+        }
+
+        public void DrawBitmap(Bitmap bitmap, RectangleF rec, float rotationDeg)
+        {
+            Matrix3x2 trans = overlay.device.Transform;
+            overlay.device.Transform = Matrix.Transformation2D(Vector2.Zero, 0f, new Vector2(1f, 1f), rec.Center, rotationDeg, Vector2.Zero);
+            overlay.device.DrawBitmap(bitmap, rec, 255, BitmapInterpolationMode.Linear);
+            overlay.device.Transform = trans;
+        }
+
+        public Bitmap GetBitmap(String name)
+        {
+            ImagingFactory imagingFactory = new ImagingFactory();
+            NativeFileStream fileStream = new NativeFileStream(Directory.GetCurrentDirectory() + "\\" + name, NativeFileMode.Open, NativeFileAccess.Read);
+            BitmapDecoder bitmapDecoder = new BitmapDecoder(imagingFactory, fileStream, DecodeOptions.CacheOnDemand);
+            BitmapFrameDecode frame = bitmapDecoder.GetFrame(0);
+            FormatConverter converter = new FormatConverter(imagingFactory);
+            converter.Initialize(frame, SharpDX.WIC.PixelFormat.Format32bppPRGBA);
+            return SharpDX.Direct2D1.Bitmap.FromWicBitmap(overlay.device, converter);
         }
 
         public TextBox GetTextBox(string Name)

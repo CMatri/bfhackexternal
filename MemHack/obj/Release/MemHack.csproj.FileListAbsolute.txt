@@ -3,7 +3,6 @@ Z:\Programming\C#\MemHack\MemHack\bin\Release\MemHack.exe
 Z:\Programming\C#\MemHack\MemHack\bin\Release\MemHack.pdb
 Z:\Programming\C#\MemHack\MemHack\obj\Release\MemHack.exe
 Z:\Programming\C#\MemHack\MemHack\obj\Release\MemHack.pdb
-Z:\Programming\C#\MemHack\MemHack\obj\Release\MemHack.Overlay.resources
 Z:\Programming\C#\MemHack\MemHack\obj\Release\MemHack.csproj.GenerateResource.Cache
 Z:\Programming\C#\MemHack\MemHack\bin\Release\SharpDX.dll
 Z:\Programming\C#\MemHack\MemHack\bin\Release\SharpDX.DXGI.dll
@@ -23,7 +22,6 @@ Z:\Programming\C#\MemHack\MemHack\bin\Release\SharpDX.Toolkit.Graphics.dll
 Z:\Programming\C#\MemHack\MemHack\bin\Release\SharpDX.Toolkit.Input.dll
 Z:\Programming\C#\MemHack\MemHack\bin\Release\SharpDX.Toolkit.Yaml.dll
 Z:\Programming\C#\MemHack\MemHack\bin\Release\SharpDX.XAudio2.dll
-Z:\Programming\C#\MemHack\MemHack\bin\Release\SharpYaml.dll
 Z:\Programming\C#\MemHack\MemHack\bin\Release\AssimpNet.dll
 Z:\Programming\C#\MemHack\MemHack\bin\Release\SharpDX.Direct3D11.xml
 Z:\Programming\C#\MemHack\MemHack\bin\Release\SharpDX.Direct3D9.xml
@@ -44,3 +42,8 @@ Z:\Programming\C#\MemHack\MemHack\bin\Release\MemHack.application
 Z:\Programming\C#\MemHack\MemHack\obj\Release\MemHack.exe.manifest
 Z:\Programming\C#\MemHack\MemHack\obj\Release\MemHack.application
 Z:\Programming\C#\MemHack\MemHack\obj\Release\MemHack.csprojResolveAssemblyReference.cache
+Z:\Programming\C#\MemHack\MemHack\bin\Release\SharpDX.Direct3D10.dll
+Z:\Programming\C#\MemHack\MemHack\bin\Release\SharpDX.Direct3D11.Effects.dll
+Z:\Programming\C#\MemHack\MemHack\bin\Release\SharpDX.Direct3D10.xml
+Z:\Programming\C#\MemHack\MemHack\bin\Release\SharpDX.Direct3D11.Effects.xml
+Z:\Programming\C#\MemHack\MemHack\obj\Release\MemHack.Settings.resources

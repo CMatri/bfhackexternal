@@ -12,6 +12,88 @@
             <unmanaged>Direct2D1 / DirectWrite</unmanaged>	
             <unmanaged-short>Direct2D1 / DirectWrite</unmanaged-short>	
         </member>
+        <member name="T:SharpDX.Direct2D1.D2D1">
+            <summary>	
+            Functions	
+            </summary>	
+            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='SharpDX.Direct2D1.D2D1']/*"/>	
+        </member>
+        <member name="M:SharpDX.Direct2D1.D2D1.IsMatrixInvertible(SharpDX.Matrix3x2@)">
+            <summary>	
+            <p>Indicates whether the specified matrix is invertible.</p>	
+            </summary>	
+            <param name="matrix"><dd>  <p>The matrix to test.</p> </dd></param>	
+            <returns><p><strong>true</strong> if the matrix was inverted; otherwise, <strong>false</strong>.</p></returns>	
+            <remarks>	
+            <p><strong>Windows Phone 8.1:</strong> This API is supported.</p>	
+            </remarks>	
+            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D2D1IsMatrixInvertible']/*"/>	
+            <msdn-id>dd368045</msdn-id>	
+            <unmanaged>BOOL D2D1IsMatrixInvertible([In] const D2D_MATRIX_3X2_F* matrix)</unmanaged>	
+            <unmanaged-short>D2D1IsMatrixInvertible</unmanaged-short>	
+        </member>
+        <member name="M:SharpDX.Direct2D1.D2D1.InvertMatrix(SharpDX.Matrix3x2@)">
+            <summary>	
+            <p>Tries to invert the specified matrix.</p>	
+            </summary>	
+            <param name="matrix"><dd>  <p>The matrix to invert.</p> </dd></param>	
+            <returns><p><strong>true</strong> if the matrix was inverted; otherwise, <strong>false</strong>.</p></returns>	
+            <remarks>	
+            <p><strong>Windows Phone 8.1:</strong> This API is supported.</p>	
+            </remarks>	
+            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D2D1InvertMatrix']/*"/>	
+            <msdn-id>dd368044</msdn-id>	
+            <unmanaged>BOOL D2D1InvertMatrix([InOut] D2D_MATRIX_3X2_F* matrix)</unmanaged>	
+            <unmanaged-short>D2D1InvertMatrix</unmanaged-short>	
+        </member>
+        <member name="M:SharpDX.Direct2D1.D2D1.MakeSkewMatrix(System.Single,System.Single,SharpDX.Vector2,SharpDX.Matrix3x2@)">
+            <summary>	
+            <p>Creates a skew transformation that has the specified x-axis angle, y-axis angle, and center point. </p>	
+            </summary>	
+            <param name="angleX"><dd>  <p>The x-axis skew angle, which is measured in degrees counterclockwise from the y-axis.</p> </dd></param>	
+            <param name="angleY"><dd>  <p>The y-axis skew angle, which is measured in degrees counterclockwise from the x-axis.</p> </dd></param>	
+            <param name="center"><dd>  <p>The center point of the skew operation.</p> </dd></param>	
+            <param name="matrix"><dd>  <p>When this method returns, contains the rotation transformation. You must allocate storate for this parameter.</p> </dd></param>	
+            <remarks>	
+            <p><strong>Windows Phone 8.1:</strong> This API is supported.</p>	
+            </remarks>	
+            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D2D1MakeSkewMatrix']/*"/>	
+            <msdn-id>dd368052</msdn-id>	
+            <unmanaged>void D2D1MakeSkewMatrix([In] float angleX,[In] float angleY,[In] D2D_POINT_2F center,[Out] D2D_MATRIX_3X2_F* matrix)</unmanaged>	
+            <unmanaged-short>D2D1MakeSkewMatrix</unmanaged-short>	
+        </member>
+        <member name="M:SharpDX.Direct2D1.D2D1.CreateFactory(SharpDX.Direct2D1.FactoryType,System.Guid,System.Nullable{SharpDX.Direct2D1.FactoryOptions},System.IntPtr@)">
+            <summary>	
+            <p>Creates a factory object  that can be used to create Direct2D resources.</p>	
+            </summary>	
+            <param name="factoryType"><dd>  <p>The threading model of the factory and the resources it creates.</p> </dd></param>	
+            <param name="riid"><dd>  <p>A reference to the IID of <strong><see cref="T:SharpDX.Direct2D1.Factory"/></strong> that is obtained by using __uuidof(<see cref="T:SharpDX.Direct2D1.Factory"/>).</p> </dd></param>	
+            <param name="factoryOptionsRef"><dd>  <p>The level of detail provided to the debugging layer.</p> </dd></param>	
+            <param name="iFactoryOut"><dd>  <p>When this method returns, contains the address to a reference to the new factory.</p> </dd></param>	
+            <returns><p>If this function succeeds, it returns <strong><see cref="F:SharpDX.Result.Ok"/></strong>. Otherwise, it returns an <strong><see cref="T:SharpDX.Result"/></strong> error code.</p></returns>	
+            <remarks>	
+            <p>The <strong><see cref="T:SharpDX.Direct2D1.Factory"/></strong> interface provides the starting point for  Direct2D. In general, objects created from a single instance of a factory object can be used with other resources created from that instance, but not with resources created by other factory instances.   </p><p><strong>Windows Phone 8.1:</strong> This API is supported.</p>	
+            </remarks>	
+            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D2D1CreateFactory']/*"/>	
+            <msdn-id>dd368034</msdn-id>	
+            <unmanaged>HRESULT D2D1CreateFactory([In] D2D1_FACTORY_TYPE factoryType,[In] const GUID&amp; riid,[In, Optional] const D2D1_FACTORY_OPTIONS* pFactoryOptions,[Out] void** ppIFactory)</unmanaged>	
+            <unmanaged-short>D2D1CreateFactory</unmanaged-short>	
+        </member>
+        <member name="M:SharpDX.Direct2D1.D2D1.MakeRotateMatrix(System.Single,SharpDX.Vector2,SharpDX.Matrix3x2@)">
+            <summary>	
+            <p>Creates a rotation transformation that rotates by the specified angle about the specified point.</p>	
+            </summary>	
+            <param name="angle"><dd>  <p>The clockwise rotation angle, in degrees. </p> </dd></param>	
+            <param name="center"><dd>  <p>The point about which to rotate.</p> </dd></param>	
+            <param name="matrix"><dd>  <p>When this method returns, contains the new rotation transformation. You must allocate storage for this parameter.  </p> </dd></param>	
+            <remarks>	
+            <p>Rotation occurs in the plane of the 2-D surface.</p><p><strong>Windows Phone 8.1:</strong> This API is supported.</p>	
+            </remarks>	
+            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D2D1MakeRotateMatrix']/*"/>	
+            <msdn-id>dd368049</msdn-id>	
+            <unmanaged>void D2D1MakeRotateMatrix([In] float angle,[In] D2D_POINT_2F center,[Out] D2D_MATRIX_3X2_F* matrix)</unmanaged>	
+            <unmanaged-short>D2D1MakeRotateMatrix</unmanaged-short>	
+        </member>
         <member name="T:SharpDX.DirectWrite.LocalFontFileLoader">
             <summary>	
             <p>A built-in implementation of the <strong><see cref="T:SharpDX.DirectWrite.FontFileLoader"/></strong> interface, that operates on local font files	
@@ -2491,10 +2573,6 @@
             <summary>Constant Gif.</summary>
             <unmanaged>CLSID_WICGifEncoder</unmanaged>
         </member>
-        <member name="F:SharpDX.WIC.BitmapEncoderGuids.Jpeg">
-            <summary>Constant Jpeg.</summary>
-            <unmanaged>CLSID_WICJpegEncoder</unmanaged>
-        </member>
         <member name="F:SharpDX.WIC.BitmapEncoderGuids.Png">
             <summary>Constant Png.</summary>
             <unmanaged>CLSID_WICPngEncoder</unmanaged>
@@ -2506,6 +2584,10 @@
         <member name="F:SharpDX.WIC.BitmapEncoderGuids.Tiff">
             <summary>Constant Tiff.</summary>
             <unmanaged>CLSID_WICTiffEncoder</unmanaged>
+        </member>
+        <member name="F:SharpDX.WIC.BitmapEncoderGuids.Jpeg">
+            <summary>Constant Jpeg.</summary>
+            <unmanaged>CLSID_WICJpegEncoder</unmanaged>
         </member>
         <member name="T:SharpDX.WIC.ContainerFormatGuids">
             <summary>	
@@ -2591,18 +2673,6 @@
             <summary>Constant Format128bppRGBFloat.</summary>
             <unmanaged>GUID_WICPixelFormat128bppRGBFloat</unmanaged>
         </member>
-        <member name="F:SharpDX.WIC.PixelFormat.Format48bppRGBFixedPoint">
-            <summary>Constant Format48bppRGBFixedPoint.</summary>
-            <unmanaged>GUID_WICPixelFormat48bppRGBFixedPoint</unmanaged>
-        </member>
-        <member name="F:SharpDX.WIC.PixelFormat.FormatDontCare">
-            <summary>Constant FormatDontCare.</summary>
-            <unmanaged>GUID_WICPixelFormatDontCare</unmanaged>
-        </member>
-        <member name="F:SharpDX.WIC.PixelFormat.Format128bpp7ChannelsAlpha">
-            <summary>Constant Format128bpp7ChannelsAlpha.</summary>
-            <unmanaged>GUID_WICPixelFormat128bpp7ChannelsAlpha</unmanaged>
-        </member>
         <member name="F:SharpDX.WIC.PixelFormat.Format48bppBGRFixedPoint">
             <summary>Constant Format48bppBGRFixedPoint.</summary>
             <unmanaged>GUID_WICPixelFormat48bppBGRFixedPoint</unmanaged>
@@ -2610,6 +2680,10 @@
         <member name="F:SharpDX.WIC.PixelFormat.Format24bppRGB">
             <summary>Constant Format24bppRGB.</summary>
             <unmanaged>GUID_WICPixelFormat24bppRGB</unmanaged>
+        </member>
+        <member name="F:SharpDX.WIC.PixelFormat.Format64bpp4Channels">
+            <summary>Constant Format64bpp4Channels.</summary>
+            <unmanaged>GUID_WICPixelFormat64bpp4Channels</unmanaged>
         </member>
         <member name="F:SharpDX.WIC.PixelFormat.Format24bpp3Channels">
             <summary>Constant Format24bpp3Channels.</summary>
@@ -2619,17 +2693,29 @@
             <summary>Constant Format32bppBGR.</summary>
             <unmanaged>GUID_WICPixelFormat32bppBGR</unmanaged>
         </member>
-        <member name="F:SharpDX.WIC.PixelFormat.Format48bppRGBHalf">
-            <summary>Constant Format48bppRGBHalf.</summary>
-            <unmanaged>GUID_WICPixelFormat48bppRGBHalf</unmanaged>
+        <member name="F:SharpDX.WIC.PixelFormat.Format48bppRGBFixedPoint">
+            <summary>Constant Format48bppRGBFixedPoint.</summary>
+            <unmanaged>GUID_WICPixelFormat48bppRGBFixedPoint</unmanaged>
         </member>
         <member name="F:SharpDX.WIC.PixelFormat.Format64bpp3ChannelsAlpha">
             <summary>Constant Format64bpp3ChannelsAlpha.</summary>
             <unmanaged>GUID_WICPixelFormat64bpp3ChannelsAlpha</unmanaged>
         </member>
+        <member name="F:SharpDX.WIC.PixelFormat.Format2bppGray">
+            <summary>Constant Format2bppGray.</summary>
+            <unmanaged>GUID_WICPixelFormat2bppGray</unmanaged>
+        </member>
+        <member name="F:SharpDX.WIC.PixelFormat.FormatDontCare">
+            <summary>Constant FormatDontCare.</summary>
+            <unmanaged>GUID_WICPixelFormatDontCare</unmanaged>
+        </member>
         <member name="F:SharpDX.WIC.PixelFormat.Format64bppBGRA">
             <summary>Constant Format64bppBGRA.</summary>
             <unmanaged>GUID_WICPixelFormat64bppBGRA</unmanaged>
+        </member>
+        <member name="F:SharpDX.WIC.PixelFormat.Format16bppBGRA5551">
+            <summary>Constant Format16bppBGRA5551.</summary>
+            <unmanaged>GUID_WICPixelFormat16bppBGRA5551</unmanaged>
         </member>
         <member name="F:SharpDX.WIC.PixelFormat.Format96bpp6Channels">
             <summary>Constant Format96bpp6Channels.</summary>
@@ -2639,9 +2725,17 @@
             <summary>Constant FormatBlackWhite.</summary>
             <unmanaged>GUID_WICPixelFormatBlackWhite</unmanaged>
         </member>
+        <member name="F:SharpDX.WIC.PixelFormat.Format112bpp6ChannelsAlpha">
+            <summary>Constant Format112bpp6ChannelsAlpha.</summary>
+            <unmanaged>GUID_WICPixelFormat112bpp6ChannelsAlpha</unmanaged>
+        </member>
         <member name="F:SharpDX.WIC.PixelFormat.Format32bppPBGRA">
             <summary>Constant Format32bppPBGRA.</summary>
             <unmanaged>GUID_WICPixelFormat32bppPBGRA</unmanaged>
+        </member>
+        <member name="F:SharpDX.WIC.PixelFormat.Format48bppRGBHalf">
+            <summary>Constant Format48bppRGBHalf.</summary>
+            <unmanaged>GUID_WICPixelFormat48bppRGBHalf</unmanaged>
         </member>
         <member name="F:SharpDX.WIC.PixelFormat.Format96bpp5ChannelsAlpha">
             <summary>Constant Format96bpp5ChannelsAlpha.</summary>
@@ -2651,9 +2745,9 @@
             <summary>Constant Format80bppCMYKAlpha.</summary>
             <unmanaged>GUID_WICPixelFormat80bppCMYKAlpha</unmanaged>
         </member>
-        <member name="F:SharpDX.WIC.PixelFormat.Format128bpp8Channels">
-            <summary>Constant Format128bpp8Channels.</summary>
-            <unmanaged>GUID_WICPixelFormat128bpp8Channels</unmanaged>
+        <member name="F:SharpDX.WIC.PixelFormat.Format16bppGrayFixedPoint">
+            <summary>Constant Format16bppGrayFixedPoint.</summary>
+            <unmanaged>GUID_WICPixelFormat16bppGrayFixedPoint</unmanaged>
         </member>
         <member name="F:SharpDX.WIC.PixelFormat.Format64bppRGBAFixedPoint">
             <summary>Constant Format64bppRGBAFixedPoint.</summary>
@@ -2662,10 +2756,6 @@
         <member name="F:SharpDX.WIC.PixelFormat.Format144bpp8ChannelsAlpha">
             <summary>Constant Format144bpp8ChannelsAlpha.</summary>
             <unmanaged>GUID_WICPixelFormat144bpp8ChannelsAlpha</unmanaged>
-        </member>
-        <member name="F:SharpDX.WIC.PixelFormat.Format112bpp6ChannelsAlpha">
-            <summary>Constant Format112bpp6ChannelsAlpha.</summary>
-            <unmanaged>GUID_WICPixelFormat112bpp6ChannelsAlpha</unmanaged>
         </member>
         <member name="F:SharpDX.WIC.PixelFormat.Format16bppGrayHalf">
             <summary>Constant Format16bppGrayHalf.</summary>
@@ -2686,10 +2776,6 @@
         <member name="F:SharpDX.WIC.PixelFormat.Format8bppIndexed">
             <summary>Constant Format8bppIndexed.</summary>
             <unmanaged>GUID_WICPixelFormat8bppIndexed</unmanaged>
-        </member>
-        <member name="F:SharpDX.WIC.PixelFormat.Format16bppGrayFixedPoint">
-            <summary>Constant Format16bppGrayFixedPoint.</summary>
-            <unmanaged>GUID_WICPixelFormat16bppGrayFixedPoint</unmanaged>
         </member>
         <member name="F:SharpDX.WIC.PixelFormat.Format48bppRGB">
             <summary>Constant Format48bppRGB.</summary>
@@ -2727,13 +2813,13 @@
             <summary>Constant Format16bppGray.</summary>
             <unmanaged>GUID_WICPixelFormat16bppGray</unmanaged>
         </member>
-        <member name="F:SharpDX.WIC.PixelFormat.Format40bppCMYKAlpha">
-            <summary>Constant Format40bppCMYKAlpha.</summary>
-            <unmanaged>GUID_WICPixelFormat40bppCMYKAlpha</unmanaged>
-        </member>
         <member name="F:SharpDX.WIC.PixelFormat.Format32bppBGRA">
             <summary>Constant Format32bppBGRA.</summary>
             <unmanaged>GUID_WICPixelFormat32bppBGRA</unmanaged>
+        </member>
+        <member name="F:SharpDX.WIC.PixelFormat.Format128bpp7ChannelsAlpha">
+            <summary>Constant Format128bpp7ChannelsAlpha.</summary>
+            <unmanaged>GUID_WICPixelFormat128bpp7ChannelsAlpha</unmanaged>
         </member>
         <member name="F:SharpDX.WIC.PixelFormat.Format80bpp4ChannelsAlpha">
             <summary>Constant Format80bpp4ChannelsAlpha.</summary>
@@ -2742,10 +2828,6 @@
         <member name="F:SharpDX.WIC.PixelFormat.Format64bppRGBA">
             <summary>Constant Format64bppRGBA.</summary>
             <unmanaged>GUID_WICPixelFormat64bppRGBA</unmanaged>
-        </member>
-        <member name="F:SharpDX.WIC.PixelFormat.Format16bppBGRA5551">
-            <summary>Constant Format16bppBGRA5551.</summary>
-            <unmanaged>GUID_WICPixelFormat16bppBGRA5551</unmanaged>
         </member>
         <member name="F:SharpDX.WIC.PixelFormat.Format64bppBGRAFixedPoint">
             <summary>Constant Format64bppBGRAFixedPoint.</summary>
@@ -2759,6 +2841,10 @@
             <summary>Constant Format96bppRGBFixedPoint.</summary>
             <unmanaged>GUID_WICPixelFormat96bppRGBFixedPoint</unmanaged>
         </member>
+        <member name="F:SharpDX.WIC.PixelFormat.Format32bppRGBA1010102">
+            <summary>Constant Format32bppRGBA1010102.</summary>
+            <unmanaged>GUID_WICPixelFormat32bppRGBA1010102</unmanaged>
+        </member>
         <member name="F:SharpDX.WIC.PixelFormat.Format32bppGrayFloat">
             <summary>Constant Format32bppGrayFloat.</summary>
             <unmanaged>GUID_WICPixelFormat32bppGrayFloat</unmanaged>
@@ -2767,9 +2853,17 @@
             <summary>Constant Format48bpp3Channels.</summary>
             <unmanaged>GUID_WICPixelFormat48bpp3Channels</unmanaged>
         </member>
+        <member name="F:SharpDX.WIC.PixelFormat.Format64bppRGBAHalf">
+            <summary>Constant Format64bppRGBAHalf.</summary>
+            <unmanaged>GUID_WICPixelFormat64bppRGBAHalf</unmanaged>
+        </member>
         <member name="F:SharpDX.WIC.PixelFormat.Format80bpp5Channels">
             <summary>Constant Format80bpp5Channels.</summary>
             <unmanaged>GUID_WICPixelFormat80bpp5Channels</unmanaged>
+        </member>
+        <member name="F:SharpDX.WIC.PixelFormat.Format40bppCMYKAlpha">
+            <summary>Constant Format40bppCMYKAlpha.</summary>
+            <unmanaged>GUID_WICPixelFormat40bppCMYKAlpha</unmanaged>
         </member>
         <member name="F:SharpDX.WIC.PixelFormat.Format56bpp7Channels">
             <summary>Constant Format56bpp7Channels.</summary>
@@ -2779,9 +2873,9 @@
             <summary>Constant Format128bppRGBFixedPoint.</summary>
             <unmanaged>GUID_WICPixelFormat128bppRGBFixedPoint</unmanaged>
         </member>
-        <member name="F:SharpDX.WIC.PixelFormat.Format64bpp4Channels">
-            <summary>Constant Format64bpp4Channels.</summary>
-            <unmanaged>GUID_WICPixelFormat64bpp4Channels</unmanaged>
+        <member name="F:SharpDX.WIC.PixelFormat.Format128bpp8Channels">
+            <summary>Constant Format128bpp8Channels.</summary>
+            <unmanaged>GUID_WICPixelFormat128bpp8Channels</unmanaged>
         </member>
         <member name="F:SharpDX.WIC.PixelFormat.Format40bpp5Channels">
             <summary>Constant Format40bpp5Channels.</summary>
@@ -2799,10 +2893,6 @@
             <summary>Constant Format24bppBGR.</summary>
             <unmanaged>GUID_WICPixelFormat24bppBGR</unmanaged>
         </member>
-        <member name="F:SharpDX.WIC.PixelFormat.Format32bppRGBA1010102">
-            <summary>Constant Format32bppRGBA1010102.</summary>
-            <unmanaged>GUID_WICPixelFormat32bppRGBA1010102</unmanaged>
-        </member>
         <member name="F:SharpDX.WIC.PixelFormat.Format4bppGray">
             <summary>Constant Format4bppGray.</summary>
             <unmanaged>GUID_WICPixelFormat4bppGray</unmanaged>
@@ -2810,14 +2900,6 @@
         <member name="F:SharpDX.WIC.PixelFormat.Format64bppPRGBA">
             <summary>Constant Format64bppPRGBA.</summary>
             <unmanaged>GUID_WICPixelFormat64bppPRGBA</unmanaged>
-        </member>
-        <member name="F:SharpDX.WIC.PixelFormat.Format2bppGray">
-            <summary>Constant Format2bppGray.</summary>
-            <unmanaged>GUID_WICPixelFormat2bppGray</unmanaged>
-        </member>
-        <member name="F:SharpDX.WIC.PixelFormat.Format64bppRGBAHalf">
-            <summary>Constant Format64bppRGBAHalf.</summary>
-            <unmanaged>GUID_WICPixelFormat64bppRGBAHalf</unmanaged>
         </member>
         <member name="F:SharpDX.WIC.PixelFormat.Format128bppRGBAFloat">
             <summary>Constant Format128bppRGBAFloat.</summary>
@@ -2876,10 +2958,6 @@
             </summary>	
             <!-- No matching elements were found for the following include tag --><include file="..\..\Documentation\CodeComments.xml" path="/comments/comment[@id='SharpDX.WIC.ResultCode']/*"/>	
         </member>
-        <member name="F:SharpDX.WIC.ResultCode.Badheader">
-            <summary>Constant Badheader.</summary>
-            <unmanaged>WINCODEC_ERR_BADHEADER</unmanaged>
-        </member>
         <member name="F:SharpDX.WIC.ResultCode.UnexpectedMetadataType">
             <summary>Constant UnexpectedMetadataType.</summary>
             <unmanaged>WINCODEC_ERR_UNEXPECTEDMETADATATYPE</unmanaged>
@@ -2904,10 +2982,6 @@
             <summary>Constant OufOfMemory.</summary>
             <unmanaged>WINCODEC_ERR_OUTOFMEMORY</unmanaged>
         </member>
-        <member name="F:SharpDX.WIC.ResultCode.Codecpresent">
-            <summary>Constant Codecpresent.</summary>
-            <unmanaged>WINCODEC_ERR_CODECPRESENT</unmanaged>
-        </member>
         <member name="F:SharpDX.WIC.ResultCode.NotInitializeD">
             <summary>Constant NotInitializeD.</summary>
             <unmanaged>WINCODEC_ERR_NOTINITIALIZED</unmanaged>
@@ -2916,6 +2990,10 @@
             <summary>Constant Alreadylocked.</summary>
             <unmanaged>WINCODEC_ERR_ALREADYLOCKED</unmanaged>
         </member>
+        <member name="F:SharpDX.WIC.ResultCode.Badheader">
+            <summary>Constant Badheader.</summary>
+            <unmanaged>WINCODEC_ERR_BADHEADER</unmanaged>
+        </member>
         <member name="F:SharpDX.WIC.ResultCode.Valueoverflow">
             <summary>Constant Valueoverflow.</summary>
             <unmanaged>WINCODEC_ERR_VALUEOVERFLOW</unmanaged>
@@ -2923,10 +3001,6 @@
         <member name="F:SharpDX.WIC.ResultCode.Paletteunavailable">
             <summary>Constant Paletteunavailable.</summary>
             <unmanaged>WINCODEC_ERR_PALETTEUNAVAILABLE</unmanaged>
-        </member>
-        <member name="F:SharpDX.WIC.ResultCode.Badstreamdata">
-            <summary>Constant Badstreamdata.</summary>
-            <unmanaged>WINCODEC_ERR_BADSTREAMDATA</unmanaged>
         </member>
         <member name="F:SharpDX.WIC.ResultCode.Componentinitializefailure">
             <summary>Constant Componentinitializefailure.</summary>
@@ -2964,6 +3038,10 @@
             <summary>Constant WrongState.</summary>
             <unmanaged>WINCODEC_ERR_WRONGSTATE</unmanaged>
         </member>
+        <member name="F:SharpDX.WIC.ResultCode.Badstreamdata">
+            <summary>Constant Badstreamdata.</summary>
+            <unmanaged>WINCODEC_ERR_BADSTREAMDATA</unmanaged>
+        </member>
         <member name="F:SharpDX.WIC.ResultCode.Badmetadataheader">
             <summary>Constant Badmetadataheader.</summary>
             <unmanaged>WINCODEC_ERR_BADMETADATAHEADER</unmanaged>
@@ -2980,13 +3058,13 @@
             <summary>Constant StreamWrite.</summary>
             <unmanaged>WINCODEC_ERR_STREAMWRITE</unmanaged>
         </member>
-        <member name="F:SharpDX.WIC.ResultCode.StreamRead">
-            <summary>Constant StreamRead.</summary>
-            <unmanaged>WINCODEC_ERR_STREAMREAD</unmanaged>
-        </member>
         <member name="F:SharpDX.WIC.ResultCode.Requestonlyvalidatmetadataroot">
             <summary>Constant Requestonlyvalidatmetadataroot.</summary>
             <unmanaged>WINCODEC_ERR_REQUESTONLYVALIDATMETADATAROOT</unmanaged>
+        </member>
+        <member name="F:SharpDX.WIC.ResultCode.Codecpresent">
+            <summary>Constant Codecpresent.</summary>
+            <unmanaged>WINCODEC_ERR_CODECPRESENT</unmanaged>
         </member>
         <member name="F:SharpDX.WIC.ResultCode.SourceRectangleDoesnotmatchdimensions">
             <summary>Constant SourceRectangleDoesnotmatchdimensions.</summary>
@@ -3012,9 +3090,17 @@
             <summary>Constant GenericError.</summary>
             <unmanaged>WINCODEC_ERR_GENERIC_ERROR</unmanaged>
         </member>
+        <member name="F:SharpDX.WIC.ResultCode.TooMuchmetadata">
+            <summary>Constant TooMuchmetadata.</summary>
+            <unmanaged>WINCODEC_ERR_TOOMUCHMETADATA</unmanaged>
+        </member>
         <member name="F:SharpDX.WIC.ResultCode.InvalidProgressivelevel">
             <summary>Constant InvalidProgressivelevel.</summary>
             <unmanaged>WINCODEC_ERR_INVALIDPROGRESSIVELEVEL</unmanaged>
+        </member>
+        <member name="F:SharpDX.WIC.ResultCode.StreamRead">
+            <summary>Constant StreamRead.</summary>
+            <unmanaged>WINCODEC_ERR_STREAMREAD</unmanaged>
         </member>
         <member name="F:SharpDX.WIC.ResultCode.Insufficientbuffer">
             <summary>Constant Insufficientbuffer.</summary>
@@ -3024,25 +3110,21 @@
             <summary>Constant UnsupportedVersion.</summary>
             <unmanaged>WINCODEC_ERR_UNSUPPORTEDVERSION</unmanaged>
         </member>
-        <member name="F:SharpDX.WIC.ResultCode.FrameMissing">
-            <summary>Constant FrameMissing.</summary>
-            <unmanaged>WINCODEC_ERR_FRAMEMISSING</unmanaged>
+        <member name="F:SharpDX.WIC.ResultCode.Duplicatemetadatapresent">
+            <summary>Constant Duplicatemetadatapresent.</summary>
+            <unmanaged>WINCODEC_ERR_DUPLICATEMETADATAPRESENT</unmanaged>
         </member>
         <member name="F:SharpDX.WIC.ResultCode.Codecnothumbnail">
             <summary>Constant Codecnothumbnail.</summary>
             <unmanaged>WINCODEC_ERR_CODECNOTHUMBNAIL</unmanaged>
         </member>
-        <member name="F:SharpDX.WIC.ResultCode.TooMuchmetadata">
-            <summary>Constant TooMuchmetadata.</summary>
-            <unmanaged>WINCODEC_ERR_TOOMUCHMETADATA</unmanaged>
-        </member>
         <member name="F:SharpDX.WIC.ResultCode.Badimage">
             <summary>Constant Badimage.</summary>
             <unmanaged>WINCODEC_ERR_BADIMAGE</unmanaged>
         </member>
-        <member name="F:SharpDX.WIC.ResultCode.Duplicatemetadatapresent">
-            <summary>Constant Duplicatemetadatapresent.</summary>
-            <unmanaged>WINCODEC_ERR_DUPLICATEMETADATAPRESENT</unmanaged>
+        <member name="F:SharpDX.WIC.ResultCode.FrameMissing">
+            <summary>Constant FrameMissing.</summary>
+            <unmanaged>WINCODEC_ERR_FRAMEMISSING</unmanaged>
         </member>
         <member name="F:SharpDX.WIC.ResultCode.Propertynotsupported">
             <summary>Constant Propertynotsupported.</summary>
@@ -19985,101 +20067,11 @@
             <unmanaged>D2D1_WINDOW_STATE_OCCLUDED</unmanaged>	
             <unmanaged-short>D2D1_WINDOW_STATE_OCCLUDED</unmanaged-short>	
         </member>
-        <member name="T:SharpDX.Direct2D1.D2D1">
-            <summary>	
-            Functions	
-            </summary>	
-            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='SharpDX.Direct2D1.D2D1']/*"/>	
-        </member>
-        <member name="M:SharpDX.Direct2D1.D2D1.IsMatrixInvertible(SharpDX.Matrix3x2@)">
-            <summary>	
-            <p>Indicates whether the specified matrix is invertible.</p>	
-            </summary>	
-            <param name="matrix"><dd>  <p>The matrix to test.</p> </dd></param>	
-            <returns><p><strong>true</strong> if the matrix was inverted; otherwise, <strong>false</strong>.</p></returns>	
-            <remarks>	
-            <p><strong>Windows Phone 8.1:</strong> This API is supported.</p>	
-            </remarks>	
-            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D2D1IsMatrixInvertible']/*"/>	
-            <msdn-id>dd368045</msdn-id>	
-            <unmanaged>BOOL D2D1IsMatrixInvertible([In] const D2D_MATRIX_3X2_F* matrix)</unmanaged>	
-            <unmanaged-short>D2D1IsMatrixInvertible</unmanaged-short>	
-        </member>
-        <member name="M:SharpDX.Direct2D1.D2D1.InvertMatrix(SharpDX.Matrix3x2@)">
-            <summary>	
-            <p>Tries to invert the specified matrix.</p>	
-            </summary>	
-            <param name="matrix"><dd>  <p>The matrix to invert.</p> </dd></param>	
-            <returns><p><strong>true</strong> if the matrix was inverted; otherwise, <strong>false</strong>.</p></returns>	
-            <remarks>	
-            <p><strong>Windows Phone 8.1:</strong> This API is supported.</p>	
-            </remarks>	
-            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D2D1InvertMatrix']/*"/>	
-            <msdn-id>dd368044</msdn-id>	
-            <unmanaged>BOOL D2D1InvertMatrix([InOut] D2D_MATRIX_3X2_F* matrix)</unmanaged>	
-            <unmanaged-short>D2D1InvertMatrix</unmanaged-short>	
-        </member>
-        <member name="M:SharpDX.Direct2D1.D2D1.MakeSkewMatrix(System.Single,System.Single,SharpDX.Vector2,SharpDX.Matrix3x2@)">
-            <summary>	
-            <p>Creates a skew transformation that has the specified x-axis angle, y-axis angle, and center point. </p>	
-            </summary>	
-            <param name="angleX"><dd>  <p>The x-axis skew angle, which is measured in degrees counterclockwise from the y-axis.</p> </dd></param>	
-            <param name="angleY"><dd>  <p>The y-axis skew angle, which is measured in degrees counterclockwise from the x-axis.</p> </dd></param>	
-            <param name="center"><dd>  <p>The center point of the skew operation.</p> </dd></param>	
-            <param name="matrix"><dd>  <p>When this method returns, contains the rotation transformation. You must allocate storate for this parameter.</p> </dd></param>	
-            <remarks>	
-            <p><strong>Windows Phone 8.1:</strong> This API is supported.</p>	
-            </remarks>	
-            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D2D1MakeSkewMatrix']/*"/>	
-            <msdn-id>dd368052</msdn-id>	
-            <unmanaged>void D2D1MakeSkewMatrix([In] float angleX,[In] float angleY,[In] D2D_POINT_2F center,[Out] D2D_MATRIX_3X2_F* matrix)</unmanaged>	
-            <unmanaged-short>D2D1MakeSkewMatrix</unmanaged-short>	
-        </member>
-        <member name="M:SharpDX.Direct2D1.D2D1.CreateFactory(SharpDX.Direct2D1.FactoryType,System.Guid,System.Nullable{SharpDX.Direct2D1.FactoryOptions},System.IntPtr@)">
-            <summary>	
-            <p>Creates a factory object  that can be used to create Direct2D resources.</p>	
-            </summary>	
-            <param name="factoryType"><dd>  <p>The threading model of the factory and the resources it creates.</p> </dd></param>	
-            <param name="riid"><dd>  <p>A reference to the IID of <strong><see cref="T:SharpDX.Direct2D1.Factory"/></strong> that is obtained by using __uuidof(<see cref="T:SharpDX.Direct2D1.Factory"/>).</p> </dd></param>	
-            <param name="factoryOptionsRef"><dd>  <p>The level of detail provided to the debugging layer.</p> </dd></param>	
-            <param name="iFactoryOut"><dd>  <p>When this method returns, contains the address to a reference to the new factory.</p> </dd></param>	
-            <returns><p>If this function succeeds, it returns <strong><see cref="F:SharpDX.Result.Ok"/></strong>. Otherwise, it returns an <strong><see cref="T:SharpDX.Result"/></strong> error code.</p></returns>	
-            <remarks>	
-            <p>The <strong><see cref="T:SharpDX.Direct2D1.Factory"/></strong> interface provides the starting point for  Direct2D. In general, objects created from a single instance of a factory object can be used with other resources created from that instance, but not with resources created by other factory instances.   </p><p><strong>Windows Phone 8.1:</strong> This API is supported.</p>	
-            </remarks>	
-            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D2D1CreateFactory']/*"/>	
-            <msdn-id>dd368034</msdn-id>	
-            <unmanaged>HRESULT D2D1CreateFactory([In] D2D1_FACTORY_TYPE factoryType,[In] const GUID&amp; riid,[In, Optional] const D2D1_FACTORY_OPTIONS* pFactoryOptions,[Out] void** ppIFactory)</unmanaged>	
-            <unmanaged-short>D2D1CreateFactory</unmanaged-short>	
-        </member>
-        <member name="M:SharpDX.Direct2D1.D2D1.MakeRotateMatrix(System.Single,SharpDX.Vector2,SharpDX.Matrix3x2@)">
-            <summary>	
-            <p>Creates a rotation transformation that rotates by the specified angle about the specified point.</p>	
-            </summary>	
-            <param name="angle"><dd>  <p>The clockwise rotation angle, in degrees. </p> </dd></param>	
-            <param name="center"><dd>  <p>The point about which to rotate.</p> </dd></param>	
-            <param name="matrix"><dd>  <p>When this method returns, contains the new rotation transformation. You must allocate storage for this parameter.  </p> </dd></param>	
-            <remarks>	
-            <p>Rotation occurs in the plane of the 2-D surface.</p><p><strong>Windows Phone 8.1:</strong> This API is supported.</p>	
-            </remarks>	
-            <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='D2D1MakeRotateMatrix']/*"/>	
-            <msdn-id>dd368049</msdn-id>	
-            <unmanaged>void D2D1MakeRotateMatrix([In] float angle,[In] D2D_POINT_2F center,[Out] D2D_MATRIX_3X2_F* matrix)</unmanaged>	
-            <unmanaged-short>D2D1MakeRotateMatrix</unmanaged-short>	
-        </member>
         <member name="T:SharpDX.Direct2D1.ResultCode">
             <summary>	
             Functions	
             </summary>	
             <!-- No matching elements were found for the following include tag --><include file=".\..\Documentation\CodeComments.xml" path="/comments/comment[@id='SharpDX.Direct2D1.ResultCode']/*"/>	
-        </member>
-        <member name="F:SharpDX.Direct2D1.ResultCode.WrongFactory">
-            <summary>Constant WrongFactory.</summary>
-            <unmanaged>D2DERR_WRONG_FACTORY</unmanaged>
-        </member>
-        <member name="F:SharpDX.Direct2D1.ResultCode.BadNumber">
-            <summary>Constant BadNumber.</summary>
-            <unmanaged>D2DERR_BAD_NUMBER</unmanaged>
         </member>
         <member name="F:SharpDX.Direct2D1.ResultCode.MaximumTextureSizeExceeded">
             <summary>Constant MaximumTextureSizeExceeded.</summary>
@@ -20101,6 +20093,10 @@
             <summary>Constant Win32Error.</summary>
             <unmanaged>D2DERR_WIN32_ERROR</unmanaged>
         </member>
+        <member name="F:SharpDX.Direct2D1.ResultCode.ExceedsMaximumBitmapSize">
+            <summary>Constant ExceedsMaximumBitmapSize.</summary>
+            <unmanaged>D2DERR_EXCEEDS_MAX_BITMAP_SIZE</unmanaged>
+        </member>
         <member name="F:SharpDX.Direct2D1.ResultCode.PopCallDidNotMatchPush">
             <summary>Constant PopCallDidNotMatchPush.</summary>
             <unmanaged>D2DERR_POP_CALL_DID_NOT_MATCH_PUSH</unmanaged>
@@ -20108,10 +20104,6 @@
         <member name="F:SharpDX.Direct2D1.ResultCode.UnsupportedVersion">
             <summary>Constant UnsupportedVersion.</summary>
             <unmanaged>D2DERR_UNSUPPORTED_VERSION</unmanaged>
-        </member>
-        <member name="F:SharpDX.Direct2D1.ResultCode.RecreateTarget">
-            <summary>Constant RecreateTarget.</summary>
-            <unmanaged>D2DERR_RECREATE_TARGET</unmanaged>
         </member>
         <member name="F:SharpDX.Direct2D1.ResultCode.ZeroVector">
             <summary>Constant ZeroVector.</summary>
@@ -20165,6 +20157,10 @@
             <summary>Constant DisplayStateInvalid.</summary>
             <unmanaged>D2DERR_DISPLAY_STATE_INVALID</unmanaged>
         </member>
+        <member name="F:SharpDX.Direct2D1.ResultCode.RecreateTarget">
+            <summary>Constant RecreateTarget.</summary>
+            <unmanaged>D2DERR_RECREATE_TARGET</unmanaged>
+        </member>
         <member name="F:SharpDX.Direct2D1.ResultCode.TextEffectIsWrongType">
             <summary>Constant TextEffectIsWrongType.</summary>
             <unmanaged>D2DERR_TEXT_EFFECT_IS_WRONG_TYPE</unmanaged>
@@ -20172,6 +20168,10 @@
         <member name="F:SharpDX.Direct2D1.ResultCode.UnsupportedOperation">
             <summary>Constant UnsupportedOperation.</summary>
             <unmanaged>D2DERR_UNSUPPORTED_OPERATION</unmanaged>
+        </member>
+        <member name="F:SharpDX.Direct2D1.ResultCode.WrongFactory">
+            <summary>Constant WrongFactory.</summary>
+            <unmanaged>D2DERR_WRONG_FACTORY</unmanaged>
         </member>
         <member name="F:SharpDX.Direct2D1.ResultCode.PushPopUnbalanced">
             <summary>Constant PushPopUnbalanced.</summary>
@@ -20189,9 +20189,9 @@
             <summary>Constant TargetNotGdiCompatible.</summary>
             <unmanaged>D2DERR_TARGET_NOT_GDI_COMPATIBLE</unmanaged>
         </member>
-        <member name="F:SharpDX.Direct2D1.ResultCode.ExceedsMaximumBitmapSize">
-            <summary>Constant ExceedsMaximumBitmapSize.</summary>
-            <unmanaged>D2DERR_EXCEEDS_MAX_BITMAP_SIZE</unmanaged>
+        <member name="F:SharpDX.Direct2D1.ResultCode.BadNumber">
+            <summary>Constant BadNumber.</summary>
+            <unmanaged>D2DERR_BAD_NUMBER</unmanaged>
         </member>
         <member name="T:SharpDX.Direct2D1.DeviceContextRenderTarget">
             <summary>	

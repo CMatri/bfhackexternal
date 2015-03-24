@@ -40,6 +40,7 @@ namespace MemHack
         public Int64 pRenderView;
         public Int64 pOwnerRenderView;
         public bool IsOccluded;
+        public bool IsSpectator;
         public Boolean InVehicle;
         public Vector3D Position = new Vector3D();
         public Vector3D Vehicle = new Vector3D();

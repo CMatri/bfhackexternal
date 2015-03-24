@@ -1,3 +1,9 @@
+using System.Collections;
+using System.IO;
+using System.IO.Packaging;
+using SharpDX.IO;
+using SharpDX.WIC;
+
 namespace MemHack
 {
     using MemLibs;
@@ -61,7 +67,7 @@ namespace MemHack
         [DllImport("user32.dll")]
         public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
         [DllImport("user32.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Auto)]
-        public static extern int SetWindowsHookEx(int idHook, HookProc lpfn, IntPtr hInstance, int threadId);
+        public static extern int SetWindowsHookEx(int idHook, Overlay.HookProc lpfn, IntPtr hInstance, int threadId);
         [DllImport("user32.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Auto)]
 
         public static extern bool UnhookWindowsHookEx(int idHook);
@@ -86,6 +92,7 @@ namespace MemHack
 
         private List<Player> enemys = new List<Player>();
         private List<Player> players = new List<Player>();
+        private List<Player> spectators = new List<Player>();
         public Player LocalPlayer = new Player();
 
         private SharpDX.Direct2D1.Factory factory;
@@ -104,10 +111,14 @@ namespace MemHack
         private Update update;
         private Matrix4x4 viewMatrix;
 
+        private SharpDX.Direct2D1.Bitmap test;
+        public SharpDX.Direct2D1.Bitmap crosshair;
+
         public Overlay()
         {
             Console.WriteLine("Battlefield open: " + Mem.AttackProcess("bf4"));
             InitializeComponent();
+
             guiComponents = new GuiComponents(this);
             mouseThread = new Thread(Mouse.HookMouse);
             keyBoardThread = new Thread(Keyboard.HookKeyboard);
@@ -132,6 +143,7 @@ namespace MemHack
             Mouse.Update();
             players.Clear();
             enemys.Clear();
+            spectators.Clear();
             guiComponents.toDrawOnRadar.Clear();
             if (Keyboard.IsKeyDown(Keys.C) && (lastTap == 0f))
             {
@@ -178,6 +190,7 @@ namespace MemHack
             LocalPlayer.Position.X = Mem.ReadFloat(num6 + sOffsets.Player.Soldier.PlayerPosition.XPlayer);
             LocalPlayer.Position.Y = Mem.ReadFloat(num6 + sOffsets.Player.Soldier.PlayerPosition.YPlayer);
             LocalPlayer.Position.Z = Mem.ReadFloat(num6 + sOffsets.Player.Soldier.PlayerPosition.ZPlayer);
+
             if (!LocalPlayer.InVehicle)
             {
                 LocalPlayer.Velocity.X = Mem.ReadFloat(num6 + 80L);
@@ -293,6 +306,11 @@ namespace MemHack
                     long num41 = Mem.ReadInt64(pSoldier + sOffsets.Player.Soldier.ClassPlayerPosition);
                     long num42 = Mem.ReadInt64(pSoldier + sOffsets.Player.Soldier.ClassClientRagDollComponent);
                     long num43 = Mem.ReadInt64(num42 + 0xb0L);
+
+                    player.IsSpectator = Convert.ToBoolean(Mem.ReadByte(num37 + 0x13C9));
+                    if (player.IsSpectator)
+                        spectators.Add(player);
+
                     if (((num40 != 0L) && (num41 != 0L)) && (num42 != 0L))
                     {
                         Mem.WriteByte(pSoldier + 0x1aL, new byte[] { 0x8f });
@@ -369,18 +387,35 @@ namespace MemHack
             long num50 = Mem.ReadInt64(num49 + 0x10L);
             float a = Mem.ReadFloat(num50 + 20L);
             float num52 = Mem.ReadFloat(num50 + 0x18L);
-            if (((Keyboard.IsKeyDown(Keys.LShiftKey) && (AimLevel < 1f)) && Settings.aimbot) && !LocalPlayer.InVehicle)
+            if (((Keyboard.IsKeyDown(Keys.LShiftKey) && (AimLevel < 1f))) && !LocalPlayer.InVehicle)
             {
                 Player player2 = DistanceCrosshairSortPlayers(enemys);
-                ViewAngle aimHead = GetAimHead(player2);
-                if ((player2 != null) && (((!player2.IsOccluded || (player2.InVehicle && (player2.VehicleEntry == 0f))) && (aimHead != null)) && (player2.Distance_Crosshair < (player2.InVehicle ? ((float)160) : ((float)70)))))
+                Vector2 onScreen = new Vector2();
+                ViewAngle aimHead = GetAimHead(player2, ref onScreen);
+                if (player2 == null) return true;
+                aimTo = new Vector3(onScreen, player2.IsOccluded ? 0 : 1);
+                //Console.WriteLine(Distance_Crosshair(new Vector2D(onScreen.X, onScreen.Y)));
+                if (Settings.aimbot && (player2 != null) && (((!player2.IsOccluded || (player2.InVehicle && (player2.VehicleEntry == 0f))) && (aimHead != null)) && (player2.Distance_Crosshair < (player2.InVehicle ? (160) : (70)))))
                 {
-                    Vector2 vector = new Vector2(LerpRadians(a, aimHead.Yaw, 0.34f), LerpRadians(num52, aimHead.Pitch, 0.34f));
-                    Mem.WriteAngle(vector.X, vector.Y);
+                    if (Math.Abs(Distance_Crosshair(new Vector2D(onScreen.X, onScreen.Y))) < 10 || player2.InVehicle)
+                    {
+                        Vector2 vector = new Vector2(LerpRadians(a, aimHead.Yaw, 0.855f), LerpRadians(num52, aimHead.Pitch, 0.855f));
+                        Mem.WriteAngle(vector.X, vector.Y);
+                    }
+                    else
+                    {
+                        Vector2 vector = new Vector2(LerpRadians(a, aimHead.Yaw, 0.275f), LerpRadians(num52, aimHead.Pitch, 0.275f));
+                        Mem.WriteAngle(vector.X, vector.Y);
+                    }
+
                 }
             }
+            else
+                aimTo = new Vector3(-200, -200, 0);
             return true;
         }
+
+        private Vector3 aimTo;
 
         public void Render()
         {
@@ -391,6 +426,11 @@ namespace MemHack
             SharpDX.Color color2;
             device.BeginDraw();
             device.Clear(new Color4(0f, 0f, 0f, 0f));
+
+            //guiComponents.DrawBitmap(test, MakeRectangle(200, 200, 26, 32), (float)(LocalPlayer.Yaw));
+
+            guiComponents.DrawCrosshair(aimTo.X, aimTo.Y, 20, 20, aimTo.Z == 1 ? SharpDX.Color.LightGreen : SharpDX.Color.OrangeRed, false);
+
             if (LocalPlayer.InVehicle)
             {
                 guiComponents.infoExpanded = false;
@@ -421,8 +461,23 @@ namespace MemHack
                 List<long> list = new List<long>();
                 bool flag = false;
                 float num3 = 0f;
+
+                foreach (Player player in spectators)
+                {
+                    //if (player.IsSpectator) Console.WriteLine(player.Name);
+                    if (player.pOwnerRenderView == LocalPlayer.pOwnerRenderView && player.IsSpectator)
+                    {
+                        solidColorBrush.Color = new SharpDX.Color(40, 40, 40, 150);
+                        device.FillRectangle(MakeRectangle((WindowWidth / 2) - 102.5f, 68.5f, 214f, 29f), solidColorBrush);
+                        solidColorBrush.Color = SharpDX.Color.Gray;
+                        device.DrawRectangle(MakeRectangle((WindowWidth / 2) - 102.5f, 68.5f, 215f, 30f), solidColorBrush);
+                        guiComponents.DrawText("SPECTATOR WARNING", (WindowWidth / 2) + 42, 72, 0x1a2, 30, true, medSmallText2, SharpDX.Color.Red);
+                    }
+                }
+
                 foreach (Player player in players)
                 {
+
                     if (player.IsValid && IsValidPtr(player.pClient))
                     {
                         long num;
@@ -650,6 +705,13 @@ namespace MemHack
             return (float)Math.Sqrt((double)((num * num) + (num2 * num2)));
         }
 
+        private float Distance_Crosshair(Vector2D vec)
+        {
+            float num = (vec.X > CrosshairX) ? (vec.X - CrosshairX) : (CrosshairX - vec.X);
+            float num2 = (vec.Y > CrosshairX) ? (vec.Y - CrosshairX) : (CrosshairY - vec.Y);
+            return (float)Math.Sqrt((double)((num * num) + (num2 * num2)));
+        }
+
         private Player DistanceCrosshairSortPlayers(List<Player> _Players)
         {
             List<Player> list = (from a in _Players
@@ -663,7 +725,7 @@ namespace MemHack
         }
 
 
-        private ViewAngle GetAimHead(Player _EnemyPlayer)
+        private ViewAngle GetAimHead(Player _EnemyPlayer, ref Vector2 onScreen)
         {
             if (_EnemyPlayer == null) return new ViewAngle();
             if (_EnemyPlayer.Skeleton.BoneHead.X != 0 &&
@@ -679,6 +741,9 @@ namespace MemHack
                     LocalPlayer.BulletSpeed,
                     LocalPlayer.BulletGravity
                     );
+
+                Vector3D posOnScreen = WorldToScreen(new Vector3D(Origin.X, Origin.Y, Origin.Z));
+                onScreen = new Vector2(posOnScreen.X, posOnScreen.Y);
 
                 Matrix4x4 mTmp = GetViewMatrixInverse();
                 Space.X = Origin.X - mTmp.M41;
@@ -862,6 +927,10 @@ namespace MemHack
             medSmallText2 = new TextFormat(fontFactory, "Segoe UI", 13.5f);
             medText = new TextFormat(fontFactory, "Segoe UI", 18f);
             largeText = new TextFormat(fontFactory, "Segoe UI", 24f);
+
+            test = guiComponents.GetBitmap("player.png");
+            crosshair = guiComponents.GetBitmap("crosshair.png");
+
             update = new Update(new EventHandler(onUpdate));
             update.FPS = 100;
             update.Start();
@@ -870,6 +939,11 @@ namespace MemHack
         public void setBrushAlpha(float v)
         {
             solidColorBrush.Color = new Color4(solidColorBrush.Color.Red, solidColorBrush.Color.Green, solidColorBrush.Color.Blue, v);
+        }
+
+        public float VectorDistance(Vector2D a, Vector2D b)
+        {
+            return (float)Math.Sqrt((a.X - b.X) * (a.X - b.X) + (a.Y - b.Y) * (a.Y - b.Y));
         }
 
         private Vector3 VectorNormalize(Vector3 _Space)

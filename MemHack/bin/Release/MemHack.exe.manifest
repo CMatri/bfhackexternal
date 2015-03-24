@@ -54,182 +54,206 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MemHack.exe" size="42496">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MemHack.exe" size="75776">
       <assemblyIdentity name="MemHack" version="1.0.0.0" language="neutral" processorArchitecture="amd64" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>tsqLwLAX7aGMSSUH2OMYyqWF8RSWkOoEzayQC90j9Bs=</dsig:DigestValue>
+        <dsig:DigestValue>NYeH1BB4NcME2giQqv2Uekd9UENd0YW/t1f8vjc31Kg=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SharpDX.dll" size="557568">
-      <assemblyIdentity name="SharpDX" version="2.6.2.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SharpDX.dll" size="558080">
+      <assemblyIdentity name="SharpDX" version="2.6.3.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>7w4wPmNsgKmLwdXm6vUmIHsK7yS36dpTG2YzoAlJvOM=</dsig:DigestValue>
+        <dsig:DigestValue>BfS+kD1ybMm94lLcwWfo/pDHHDXo8gjDgP1/n9xKEz4=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SharpDX.D3DCompiler.dll" size="44032">
-      <assemblyIdentity name="SharpDX.D3DCompiler" version="2.6.2.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
+      <assemblyIdentity name="SharpDX.D3DCompiler" version="2.6.3.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>C13wxIHutW5yBj/Ls2L4dNxTaE5sxvJEmL5vsGKsMVM=</dsig:DigestValue>
+        <dsig:DigestValue>UlFQaysLAGFu75FXriDnlM1ada9vKO8wZU1S++2Sjsw=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SharpDX.Direct2D1.dll" size="230912">
-      <assemblyIdentity name="SharpDX.Direct2D1" version="2.6.2.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
+      <assemblyIdentity name="SharpDX.Direct2D1" version="2.6.3.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>SbrYJPBCNWkZ+UKFAQrQ5N1kjhvzMsYQk7YRkxaOOxY=</dsig:DigestValue>
+        <dsig:DigestValue>cbIUYSqmzs/5d7WdA2zrHJHZWlsYeXrRy27MDpKtZ+s=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SharpDX.Direct3D10.dll" size="179200">
+      <assemblyIdentity name="SharpDX.Direct3D10" version="2.6.3.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>JPbI8L3AhCgPOKpdDtX6Wj2z7Lf/t6nYYpSNFeUAZvk=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SharpDX.Direct3D11.dll" size="171520">
-      <assemblyIdentity name="SharpDX.Direct3D11" version="2.6.2.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
+      <assemblyIdentity name="SharpDX.Direct3D11" version="2.6.3.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>c7U7M/ubeptz+9PzpYFmcTHxKOdpOza1hxoyS2cmJkE=</dsig:DigestValue>
+        <dsig:DigestValue>9Au9kPl0SfweoAssaZ+uA+8px+4hDYgS6gYRgbWt428=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SharpDX.Direct3D11.Effects.dll" size="58880">
+      <assemblyIdentity name="SharpDX.Direct3D11.Effects" version="2.6.3.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>bhUs5heInQvNxeYilG7rBuYy9tzi9jU44kZbNL8fDck=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SharpDX.Direct3D9.dll" size="349696">
-      <assemblyIdentity name="SharpDX.Direct3D9" version="2.6.2.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
+      <assemblyIdentity name="SharpDX.Direct3D9" version="2.6.3.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>mJA8t52nnPTD5fahY8TMk2w2Fq3cLeMAa99/qwy1x+w=</dsig:DigestValue>
+        <dsig:DigestValue>TlcyVdapGfFM+wG3pmuFrxjJwGUAsbZwED4ohs4MtG4=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SharpDX.DXGI.dll" size="90624">
-      <assemblyIdentity name="SharpDX.DXGI" version="2.6.2.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
+      <assemblyIdentity name="SharpDX.DXGI" version="2.6.3.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>yqrn3aNIi1/wgXRRQXIZVuKZOwOKmUdoxD95sl23YEQ=</dsig:DigestValue>
+        <dsig:DigestValue>7xflCbkw0R5NTo5S/Jas3LD0kHznl49NJd+NIM+ZeRA=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SharpDX.Toolkit.dll" size="55808">
-      <assemblyIdentity name="SharpDX.Toolkit" version="2.6.2.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SharpDX.Toolkit.dll" size="58880">
+      <assemblyIdentity name="SharpDX.Toolkit" version="2.6.3.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>iKJFLEAubU1D/h/KFOOlxnnlv3QYrF50YBC8RikS8mw=</dsig:DigestValue>
+        <dsig:DigestValue>5rODY6pefKWHZKcF+xvqCWk5H+HuNtvmqJWoZcutP2M=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SharpDX.Toolkit.Audio.dll" size="45568">
-      <assemblyIdentity name="SharpDX.Toolkit.Audio" version="2.6.2.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
+      <assemblyIdentity name="SharpDX.Toolkit.Audio" version="2.6.3.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>OABw8JkGrGqXY1Pg4OpOnpBOzX17ClHKrGPPYCDtDYI=</dsig:DigestValue>
+        <dsig:DigestValue>y1fDG/Ml3Ptc6a6ITWbHp/8JF7cEdtqYNaaQ59oWnJs=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SharpDX.Toolkit.Compiler.dll" size="92160">
-      <assemblyIdentity name="SharpDX.Toolkit.Compiler" version="2.6.2.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SharpDX.Toolkit.Compiler.dll" size="95744">
+      <assemblyIdentity name="SharpDX.Toolkit.Compiler" version="2.6.3.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>eckQfBD7reWSBnvDs8CmuP9R4GjymSzZ57Y1rRz+3ig=</dsig:DigestValue>
+        <dsig:DigestValue>Kf4yr/qyWN4hQRhXN9TiAe6Cn1Q1e6kFN4MZpGaGLN8=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SharpDX.Toolkit.Game.dll" size="77312">
-      <assemblyIdentity name="SharpDX.Toolkit.Game" version="2.6.2.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SharpDX.Toolkit.Game.dll" size="80384">
+      <assemblyIdentity name="SharpDX.Toolkit.Game" version="2.6.3.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>Z/U/02WlEE3QTQ27QLb615tNVjsnEPNo0jyjCWJWc0Q=</dsig:DigestValue>
+        <dsig:DigestValue>YGOjcF5AvOTDBCQn8TAgSbCb2dt0+f9nqsXWgEWW5j8=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SharpDX.Toolkit.Graphics.dll" size="436224">
-      <assemblyIdentity name="SharpDX.Toolkit.Graphics" version="2.6.2.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SharpDX.Toolkit.Graphics.dll" size="439808">
+      <assemblyIdentity name="SharpDX.Toolkit.Graphics" version="2.6.3.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>FVVAW0A27JVGqPJukvVxULNOP6c/pLt5A+zAWI8uVzs=</dsig:DigestValue>
+        <dsig:DigestValue>HpsLIFBVDezGmizyVlM0twsEmvvrEkGP6I7ARcgesWQ=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SharpDX.Toolkit.Input.dll" size="50176">
-      <assemblyIdentity name="SharpDX.Toolkit.Input" version="2.6.2.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
+      <assemblyIdentity name="SharpDX.Toolkit.Input" version="2.6.3.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>Ug9+N3bSy9NXPUfyY0Ht7sbZrWClRXJuHNrHgl8XBTw=</dsig:DigestValue>
+        <dsig:DigestValue>NqcaoAgn1v8aJ8193CGgj8h7uqfjUhZ5eJXGRC5SLLM=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SharpDX.Toolkit.Yaml.dll" size="12800">
-      <assemblyIdentity name="SharpDX.Toolkit.Yaml" version="2.6.2.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
+      <assemblyIdentity name="SharpDX.Toolkit.Yaml" version="2.6.3.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>3ZTeF7+xLOAb5oB6ns0oEiMoXHBjATIkE/ObuDC2pWc=</dsig:DigestValue>
+        <dsig:DigestValue>0Q03roC07hwiy5YBKdqggKbvJMWW8+Cr4b/Wlykqleg=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SharpDX.XAudio2.dll" size="87552">
-      <assemblyIdentity name="SharpDX.XAudio2" version="2.6.2.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SharpDX.XAudio2.dll" size="88064">
+      <assemblyIdentity name="SharpDX.XAudio2" version="2.6.3.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>QOCiv9gfcgmYnLiv2kXnoD6n2gyLRfYjsL5WnDYxZjE=</dsig:DigestValue>
+        <dsig:DigestValue>ioFeRfusQKrvE1Nxirp2X/J/oTORUh+wvxWE6NrmuFA=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -263,13 +287,31 @@
       <dsig:DigestValue>6HOrezb1Ii5BeLago1CTuwhVC9eYJ+uc7fcCxV5cdXw=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="MemHack.exe.config" size="187">
+  <file name="MemHack.exe.config" size="1006">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>xm4bo26HQ0LNVwz1vdPYtzhkpMnp2AI5i+f0b+OahTI=</dsig:DigestValue>
+      <dsig:DigestValue>qKYaxHNAjfnHMBCUa9/oxFCsdeb+8zrEuI2/3QAWpIA=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="sharpdx_direct3d11_effects_x64.dll" size="345600">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>Xxpf89wmF8+cSdx4wHhpI5Z0ff2mhDyccYzW/Rt7GgU=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="sharpdx_direct3d11_effects_x86.dll" size="286208">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>CLoowqWaOUBVwkp0jGXvLZjn/XRmN6L5cvEPWf5xDz4=</dsig:DigestValue>
     </hash>
   </file>
 </asmv1:assembly>
