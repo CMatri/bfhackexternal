@@ -55,9 +55,7 @@ namespace MemHack
             overlay.device.DrawRectangle(overlay.MakeRectangle(X, (Y - 20), Width, Height), overlay.solidColorBrush);
             overlay.solidColorBrush.Color = new Color4(Color.Gray.R, Color.Gray.G, Color.Gray.B, 0.5f);
             if (expanded)
-            {
                 overlay.device.DrawLine(new Vector2(X, Y), new Vector2((X + Width), Y), overlay.solidColorBrush);
-            }
             DrawText(name, X + 5, Y - 0x15, 200, 20, false, overlay.medSmallText, Color.LightGray);
             DrawGuiButton((X + Width) - 0x10, Y - 0x10, 12, 12, ref expanded, true);
             overlay.solidColorBrush.Color = color;
@@ -191,8 +189,8 @@ namespace MemHack
             rectangle = new Rectangle();
             rectangle.Width = 175;
             rectangle.Height = 73;
-            rectangle.X = (overlay.Width - 12) - rectangle.Width;
-            rectangle.Y = ((725 - (!infoExpanded ? 90 : 0)) - (!radarExpanded ? 250 : 0)) - (!hackMenuExpanded ? 310 : 0);
+            rectangle.X = (overlay.Width - 7) - rectangle.Width;
+            rectangle.Y = ((730 - (!infoExpanded ? 90 : 0)) - (!radarExpanded ? 250 : 0)) - (!hackMenuExpanded ? 310 : 0);
             DrawGuiBox(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height, ref playerSearchExpanded, "Player Search");
             if (playerSearchExpanded)
             {
@@ -221,8 +219,8 @@ namespace MemHack
             rectangle = new Rectangle();
             rectangle.Width = 175;
             rectangle.Height = 280;
-            rectangle.X = (overlay.Width - 12) - rectangle.Width;
-            rectangle.Y = (420 - (!infoExpanded ? 90 : 0)) - (!radarExpanded ? 250 : 0);
+            rectangle.X = (overlay.Width - 7) - rectangle.Width;
+            rectangle.Y = (425 - (!infoExpanded ? 90 : 0)) - (!radarExpanded ? 250 : 0);
             DrawGuiBox(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height, ref hackMenuExpanded, "Hack Menu");
             if (hackMenuExpanded)
             {
@@ -265,8 +263,8 @@ namespace MemHack
             rectangle = new Rectangle();
             rectangle.Width = 250;
             rectangle.Height = 90;
-            rectangle.X = (overlay.Width - 12) - rectangle.Width;
-            rectangle.Y = 30;
+            rectangle.X = (overlay.Width - 7) - rectangle.Width;
+            rectangle.Y = 35;
             DrawGuiBox(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height, ref infoExpanded, "Info");
             if (infoExpanded)
             {
@@ -278,8 +276,11 @@ namespace MemHack
                 }
                 DrawText(overlay.LocalPlayer.Ammo + "/" + overlay.LocalPlayer.MaxAmmo, rectangle.X + 10, rectangle.Y + 10, 100, 20, false, overlay.largeText, Color.LightGray);
                 DrawText("+" + num, rectangle.X + ((num < 100) ? ((num < 10) ? 200 : 0xc3) : 0xb9), rectangle.Y + 10, 100, 20, false, overlay.largeText, Color.LightGray);
-                DrawHealthBar(rectangle.X + 10, rectangle.Y + 60, rectangle.Width - 20, 10, (int)overlay.LocalPlayer.Health, (int)overlay.LocalPlayer.MaxHealth, false);
+                DrawText(overlay.spectators.Count + " Spectators on server.", rectangle.X + 35, rectangle.Y + 50, 400, 20, false, overlay.medText, Color.LightGray);
+                // DrawHealthBar(rectangle.X + 10, rectangle.Y + 60, rectangle.Width - 20, 10, (int)overlay.LocalPlayer.Health, (int)overlay.LocalPlayer.MaxHealth, false);
             }
+
+            DrawHealthBar(0, 0, overlay.Width, 10, (int)overlay.LocalPlayer.Health, (int)overlay.LocalPlayer.MaxHealth, false);
         }
 
         public void DrawRadar()
@@ -288,8 +289,8 @@ namespace MemHack
             radar = new Rectangle();
             radar.Width = 250;
             radar.Height = 250;
-            radar.X = (overlay.Width - 12) - radar.Width;
-            radar.Y = 145 - (!infoExpanded ? 90 : 0);
+            radar.X = (overlay.Width - 7) - radar.Width;
+            radar.Y = 150 - (!infoExpanded ? 90 : 0);
             DrawGuiBox(radar.X, radar.Y, radar.Width, radar.Height, ref radarExpanded, "Radar");
             if (radarExpanded)
             {
@@ -306,6 +307,18 @@ namespace MemHack
                 }
             }
             overlay.solidColorBrush.Color = color;
+        }
+
+        public void DrawLockedOnPlayerInfo(Player p)
+        {
+            Vector3D headPos = overlay.WorldToScreen(p.Skeleton.BoneHead);
+            Vector2D drawPos = new Vector2D(headPos.X + 20, headPos.Y);
+            Color drawColor = p.IsOccluded ? Color.Orange : Color.LimeGreen;
+
+            DrawText(p.Name, (int)drawPos.X, (int)drawPos.Y - 20, 400, 20, false, overlay.medSmallText2, drawColor);
+            DrawText("Distance: " + (int)p.Distance_3D, (int)drawPos.X, (int)drawPos.Y, 400, 20, false, overlay.medSmallText2, drawColor);
+            //DrawText("Health: " + (int)p.Health + "/" + (int)p.MaxHealth, (int)drawPos.X, (int)drawPos.Y + 20, 400, 20, false, overlay.medSmallText2, Color.Wheat);
+            DrawHealthBar((int)drawPos.X, (int)drawPos.Y + 25, 80, 5, (int) p.Health, (int) p.MaxHealth, false);
         }
 
         public void DrawEntities()

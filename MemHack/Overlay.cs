@@ -34,6 +34,7 @@ namespace MemHack
         public static bool ESPLines = true;
         public static bool ESPSkeleton = true;
         public static bool ESPVehicle = true;
+        public static bool UltraHax = true;
 
         public static bool crossHair = true;
         public static bool guiDefinedCrosshair = true;
@@ -92,8 +93,9 @@ namespace MemHack
 
         private List<Player> enemys = new List<Player>();
         private List<Player> players = new List<Player>();
-        private List<Player> spectators = new List<Player>();
+        public List<Player> spectators = new List<Player>();
         public Player LocalPlayer = new Player();
+        public Player LockedOnPlayer;
 
         private SharpDX.Direct2D1.Factory factory;
         private SharpDX.DirectWrite.Factory fontFactory;
@@ -164,7 +166,11 @@ namespace MemHack
             viewMatrix = getViewMatrix();
             LocalPlayer.Health = Mem.ReadFloat(num5 + sOffsets.Player.Soldier.PlayerHealth.CurPlayerHealth);
             LocalPlayer.Team = Mem.ReadInt32(pClient + sOffsets.Player.Team);
-            LocalPlayer.Name = Mem.ReadString(pClient + sOffsets.Player.Name, 0x10L);
+            LocalPlayer.Name = Mem.ReadString(pClient + sOffsets.Player.Name, 10);
+            foreach (char c in LocalPlayer.Name)
+            {
+                if ((int)c > 127) LocalPlayer.Name.Replace(Char.ToString(c), "");
+            }
             LocalPlayer.Pose = Mem.ReadInt32(num4 + sOffsets.Player.Soldier.SoldierPose);
             LocalPlayer.InVehicle = IsValidPtr(Mem.ReadInt64(pClient + 0x14c0L));
             LocalPlayer.SoldierTransform = Mem.ReadMatrix4x4(num7 + sOffsets.Player.Soldier.ClientRagDollComponent.Transform);
@@ -175,13 +181,13 @@ namespace MemHack
             LocalPlayer.pVehicle = GetClientSoldier(pClient, LocalPlayer);
             LocalPlayer.VehicleEntry = Mem.ReadByte(pClient + 0x14c8L);
             long num8 = Mem.ReadInt64(num4 + sOffsets.Player.Soldier.ClassClientSoldierWeaponsComponent);
-            long num9 = Mem.ReadInt64(num8 + sOffsets.Player.Soldier.ClientSoldierWeaponsComponent.ClassClientAnimatedSoldierWeaponHandler);
+            long pWeaponHandler = Mem.ReadInt64(num8 + sOffsets.Player.Soldier.ClientSoldierWeaponsComponent.ClassClientAnimatedSoldierWeaponHandler);
             int num10 = Mem.ReadInt32(num8 + sOffsets.Player.Soldier.ClientSoldierWeaponsComponent.ActiveSlot);
-            long num11 = Mem.ReadInt64(num9 + (num10 * 8));
-            long num12 = Mem.ReadInt64(num11 + sOffsets.Player.Soldier.ClientSoldierWeaponsComponent.ClientAnimatedSoldierWeaponHandler.ClientSoldierWeapon.ClassWeaponFiring);
-            long num13 = Mem.ReadInt64(num11 + 0x4850L);
+            long pSoldierWeapon = Mem.ReadInt64(pWeaponHandler + (num10 * 8));
+            long num12 = Mem.ReadInt64(pSoldierWeapon + sOffsets.Player.Soldier.ClientSoldierWeaponsComponent.ClientAnimatedSoldierWeaponHandler.ClientSoldierWeapon.ClassWeaponFiring);
+            long num13 = Mem.ReadInt64(pSoldierWeapon + 0x4850L);
             long num14 = Mem.ReadInt64(num13 + 0x20L);
-            long num15 = Mem.ReadInt64(num11 + sOffsets.Player.Soldier.ClientSoldierWeaponsComponent.ClientAnimatedSoldierWeaponHandler.ClientSoldierWeapon.ClassClientSoldierAimingSimulation);
+            long num15 = Mem.ReadInt64(pSoldierWeapon + sOffsets.Player.Soldier.ClientSoldierWeaponsComponent.ClientAnimatedSoldierWeaponHandler.ClientSoldierWeapon.ClassClientSoldierAimingSimulation);
             LocalPlayer.Pitch = Mem.ReadFloat(num4 + sOffsets.Player.Soldier.Pitch);
             LocalPlayer.Ammo = Mem.ReadInt32(num12 + 0x1a0L);
             LocalPlayer.MaxAmmo = Mem.ReadInt32(num12 + 420L);
@@ -198,6 +204,7 @@ namespace MemHack
                 LocalPlayer.Velocity.Z = Mem.ReadFloat(num6 + 0x58L);
                 if (num10 < 2)
                 {
+                    //Console.WriteLine(num12.ToString("X"));
                     long num16 = Mem.ReadInt64(num12 + sOffsets.Player.Soldier.ClientSoldierWeaponsComponent.ClientAnimatedSoldierWeaponHandler.ClientSoldierWeapon.WeaponFiring.WeaponSway);
                     long num17 = Mem.ReadInt64(num16 + 8L);
                     AimLevel = Mem.ReadFloat(num15 + sOffsets.Player.Soldier.ClientSoldierWeaponsComponent.ClientAnimatedSoldierWeaponHandler.ClientSoldierWeapon.ClientSoldierAimingSimulation.ZoomLevel);
@@ -209,6 +216,15 @@ namespace MemHack
                     long num19 = Mem.ReadInt64(num4 + sOffsets.WeaponModifier.BreathControl);
                     byte num20 = 0;
                     Mem.WriteInt32(num19 + 0x58L, num20);
+
+                    if (Settings.UltraHax && LocalPlayer.IsValid && !IsOnDeployScreen() && IsValidPtr(pSoldierWeapon))
+                    {
+                        Int64 pClientWeaponn = Mem.ReadInt64(pSoldierWeapon + 0x49A8);
+                        if (IsValidPtr(pClientWeaponn + 0x0020))
+                        {
+                            Mem.WriteInt32(pClientWeaponn + 0x0020, 0); //  WeaponModifier* m_pModifier; //0x0020 
+                        }
+                    }
                 }
             }
             else
@@ -249,15 +265,15 @@ namespace MemHack
             long num31 = Mem.ReadInt64(num30 + sOffsets.WeaponFiring.PrimaryFire.ClassShotConfigData);
             if (num10 == 0)
             {
-                Mem.WriteInt32(num31 + sOffsets.WeaponFiring.PrimaryFire.ShotConfigData.NumberOfBulletsPerShot, 2);
-                Mem.WriteInt32(num31 + sOffsets.WeaponFiring.PrimaryFire.ShotConfigData.NumberOfBulletsPerShell, 0x4b0);
-                Mem.WriteInt32(num31 + sOffsets.WeaponFiring.PrimaryFire.ShotConfigData.NumberOfBulletsPerBurst, 1);
+                Mem.WriteInt32(num31 + sOffsets.WeaponFiring.PrimaryFire.ShotConfigData.NumberOfBulletsPerShot, Settings.UltraHax ? 20 : 2);
+                Mem.WriteInt32(num31 + sOffsets.WeaponFiring.PrimaryFire.ShotConfigData.NumberOfBulletsPerShell, Settings.UltraHax ? 20 : 0x4b0);
+                Mem.WriteInt32(num31 + sOffsets.WeaponFiring.PrimaryFire.ShotConfigData.NumberOfBulletsPerBurst, Settings.UltraHax ? 2 : 1);
             }
             else if (num10 == 1)
             {
-                Mem.WriteInt32(num31 + sOffsets.WeaponFiring.PrimaryFire.ShotConfigData.NumberOfBulletsPerShot, 2);
-                Mem.WriteInt32(num31 + sOffsets.WeaponFiring.PrimaryFire.ShotConfigData.NumberOfBulletsPerShell, 2);
-                Mem.WriteInt32(num31 + sOffsets.WeaponFiring.PrimaryFire.ShotConfigData.NumberOfBulletsPerBurst, 2);
+                Mem.WriteInt32(num31 + sOffsets.WeaponFiring.PrimaryFire.ShotConfigData.NumberOfBulletsPerShot, Settings.UltraHax ? 20 : 2);
+                Mem.WriteInt32(num31 + sOffsets.WeaponFiring.PrimaryFire.ShotConfigData.NumberOfBulletsPerShell, Settings.UltraHax ? 20 : 2);
+                Mem.WriteInt32(num31 + sOffsets.WeaponFiring.PrimaryFire.ShotConfigData.NumberOfBulletsPerBurst, Settings.UltraHax ? 2 : 2);
             }
             else if (num10 == 2)
             {
@@ -300,12 +316,20 @@ namespace MemHack
                         pClient = num37,
                         Name = Mem.ReadString(num37 + sOffsets.Player.Name, 20L)
                     };
+                    foreach (char c in player.Name)
+                    {
+                        if ((int)c > 127) player.Name.Replace(Char.ToString(c), "");
+                    }
                     long clientSoldier = GetClientSoldier(num37, player);
                     long pSoldier = Mem.ReadInt64(Mem.ReadInt64(num37 + 0x14b0L)) - 8L;
                     long num40 = Mem.ReadInt64(pSoldier + sOffsets.Player.Soldier.ClassHealth);
                     long num41 = Mem.ReadInt64(pSoldier + sOffsets.Player.Soldier.ClassPlayerPosition);
                     long num42 = Mem.ReadInt64(pSoldier + sOffsets.Player.Soldier.ClassClientRagDollComponent);
                     long num43 = Mem.ReadInt64(num42 + 0xb0L);
+                    long num45 = Mem.ReadInt64(pClient + 0x14);
+                    long num46 = Mem.ReadInt64(pClient + 0x1510);
+                    player.pRenderView = num45;
+                    player.pOwnerRenderView = num46;
 
                     player.IsSpectator = Convert.ToBoolean(Mem.ReadByte(num37 + 0x13C9));
                     if (player.IsSpectator)
@@ -366,10 +390,6 @@ namespace MemHack
                             player.Velocity.Y = Mem.ReadFloat(clientSoldier + 0x284L);
                             player.Velocity.Z = Mem.ReadFloat(clientSoldier + 0x288L);
                         }
-                        long num45 = Mem.ReadInt64(num37 + 0x1520L);
-                        long num46 = Mem.ReadInt64(num37 + 0x1510L);
-                        player.pRenderView = num45;
-                        player.pOwnerRenderView = num46;
                         byte num47 = Mem.ReadByte(pSoldier + sOffsets.Player.Soldier.IsOccluded);
                         player.IsOccluded = num47 != 0;
                         player.Distance_3D = GetLength(LocalPlayer.Position, player.Position);
@@ -382,31 +402,50 @@ namespace MemHack
                     }
                 }
             }
+
+            if (IsValidPtr(0x1421c1950) && IsValidPtr(Mem.ReadInt64(0x1421c1950)) && IsValidPtr(Mem.ReadInt64(0x1421c1950) + 0x49c0) && IsValidPtr(Mem.ReadInt64(Mem.ReadInt64(0x1421c1950) + 0x49c0) + 0x78) && IsValidPtr(Mem.ReadInt64(Mem.ReadInt64(Mem.ReadInt64(0x1421c1950) + 0x49c0) + 0x78) + 0x8))
+            {
+                Int64 noSpread = Mem.ReadInt64(Mem.ReadInt64(Mem.ReadInt64(Mem.ReadInt64(0x1421c1950) + 0x49c0) + 0x78) + 0x8);
+                if (IsValidPtr(noSpread) && Settings.UltraHax)
+                {
+                    Mem.WriteFloat(noSpread + 0x360, 0.0f);
+                    Mem.WriteFloat(noSpread + 0x364, 0.0f);
+                    Mem.WriteFloat(noSpread + 0x368, 0.0f);
+                    Mem.WriteFloat(noSpread + 0x36C, 0.0f);
+                }
+            }
+
             long num48 = Mem.ReadInt64(sAddresses.ViewAngles);
             long num49 = Mem.ReadInt64(num48 + 0x4988L);
             long num50 = Mem.ReadInt64(num49 + 0x10L);
             float a = Mem.ReadFloat(num50 + 20L);
             float num52 = Mem.ReadFloat(num50 + 0x18L);
-            if (((Keyboard.IsKeyDown(Keys.LShiftKey) && (AimLevel < 1f))) && !LocalPlayer.InVehicle)
+            if (Keyboard.IsKeyDown(Keys.LShiftKey))
             {
                 Player player2 = DistanceCrosshairSortPlayers(enemys);
                 Vector2 onScreen = new Vector2();
                 ViewAngle aimHead = GetAimHead(player2, ref onScreen);
+
                 if (player2 == null) return true;
                 aimTo = new Vector3(onScreen, player2.IsOccluded ? 0 : 1);
+                LockedOnPlayer = player2;
+
                 //Console.WriteLine(Distance_Crosshair(new Vector2D(onScreen.X, onScreen.Y)));
-                if (Settings.aimbot && (player2 != null) && (((!player2.IsOccluded || (player2.InVehicle && (player2.VehicleEntry == 0f))) && (aimHead != null)) && (player2.Distance_Crosshair < (player2.InVehicle ? (160) : (70)))))
+                if (Settings.aimbot && !LocalPlayer.InVehicle && (AimLevel < 1f) && (player2 != null) && (((!player2.IsOccluded || (player2.InVehicle)) && (aimHead != null)) && (player2.Distance_Crosshair < (player2.InVehicle ? (160) : (Settings.UltraHax ? 280 : 90)))))
                 {
-                    if (Math.Abs(Distance_Crosshair(new Vector2D(onScreen.X, onScreen.Y))) < 10 || player2.InVehicle)
+                    if (Math.Abs(Distance_Crosshair(new Vector2D(onScreen.X, onScreen.Y))) < 15 || player2.InVehicle)
                     {
                         Vector2 vector = new Vector2(LerpRadians(a, aimHead.Yaw, 0.855f), LerpRadians(num52, aimHead.Pitch, 0.855f));
                         Mem.WriteAngle(vector.X, vector.Y);
                     }
                     else
                     {
-                        Vector2 vector = new Vector2(LerpRadians(a, aimHead.Yaw, 0.275f), LerpRadians(num52, aimHead.Pitch, 0.275f));
+                        Vector2 vector = new Vector2(LerpRadians(a, aimHead.Yaw, 0.25f), LerpRadians(num52, aimHead.Pitch, 0.25f));
                         Mem.WriteAngle(vector.X, vector.Y);
                     }
+
+                    if (Settings.UltraHax)
+                        Mem.WriteAngle(aimHead.Yaw, aimHead.Pitch);
 
                 }
             }
@@ -429,7 +468,8 @@ namespace MemHack
 
             //guiComponents.DrawBitmap(test, MakeRectangle(200, 200, 26, 32), (float)(LocalPlayer.Yaw));
 
-            guiComponents.DrawCrosshair(aimTo.X, aimTo.Y, 20, 20, aimTo.Z == 1 ? SharpDX.Color.LightGreen : SharpDX.Color.OrangeRed, false);
+            if (Settings.ESPHead)
+                guiComponents.DrawCrosshair(aimTo.X, aimTo.Y, 15, 15, aimTo.Z == 1 ? SharpDX.Color.LightGreen : SharpDX.Color.OrangeRed, false);
 
             if (LocalPlayer.InVehicle)
             {
@@ -464,15 +504,15 @@ namespace MemHack
 
                 foreach (Player player in spectators)
                 {
-                    //if (player.IsSpectator) Console.WriteLine(player.Name);
-                    if (player.pOwnerRenderView == LocalPlayer.pOwnerRenderView && player.IsSpectator)
+                    if (Mem.ReadInt64(player.pOwnerRenderView + 0x00F8) == LocalPlayer.pClient && player.IsSpectator)
                     {
                         solidColorBrush.Color = new SharpDX.Color(40, 40, 40, 150);
-                        device.FillRectangle(MakeRectangle((WindowWidth / 2) - 102.5f, 68.5f, 214f, 29f), solidColorBrush);
+                        device.FillRectangle(MakeRectangle((WindowWidth / 2) - 121.5f, 76.5f, 254f, 29f), solidColorBrush);
                         solidColorBrush.Color = SharpDX.Color.Gray;
-                        device.DrawRectangle(MakeRectangle((WindowWidth / 2) - 102.5f, 68.5f, 215f, 30f), solidColorBrush);
-                        guiComponents.DrawText("SPECTATOR WARNING", (WindowWidth / 2) + 42, 72, 0x1a2, 30, true, medSmallText2, SharpDX.Color.Red);
+                        device.DrawRectangle(MakeRectangle((WindowWidth / 2) - 121.5f, 76.5f, 255f, 30f), solidColorBrush);
+                        guiComponents.DrawText("SPECTATOR WARNING", (WindowWidth / 2) - 15, 72, 0x1a2, 30, true, largeText, SharpDX.Color.Red);
                     }
+
                 }
 
                 foreach (Player player in players)
@@ -585,7 +625,7 @@ namespace MemHack
                         {
                             if ((!player.IsOccluded && Settings.ESPHead) && (player.Distance_Crosshair < 110f))
                             {
-                                guiComponents.DrawCrosshair(vectord5.X, vectord5.Y, 10, 10, new SharpDX.Color(solidColorBrush.Color), false);
+                                //guiComponents.DrawCrosshair(vectord5.X, vectord5.Y, 10, 10, new SharpDX.Color(solidColorBrush.Color), false);
                             }
                             if (player.Distance_3D <= 150f)
                             {
@@ -610,14 +650,18 @@ namespace MemHack
                         }
                         if (Settings.ESPDistance)
                         {
-                            guiComponents.DrawText(((int)player.Distance_3D) + "m", (int)vectord4.X, ((int)vectord3.Y) + ((int)num4), 200, 20, true, smallText, SharpDX.Color.White);
+                            guiComponents.DrawText(((int)player.Distance_3D) + "m", (int)vectord4.X, ((int)vectord3.Y) + ((int)num4), 200, 20, true, smallText, SharpDX.Color.Wheat);
                         }
                     }
                 }
                 if (flag && Settings.proxWarning)
                 {
-                    guiComponents.DrawText("PROXIMITY WARNING", (WindowWidth / 2) - 0x19, WindowHeight / 8, 0x198, 30, true, largeText, SharpDX.Color.Red);
-                    guiComponents.DrawText(((num3 > 0f) ? ("x" + num3) : ("")), (WindowWidth / 2) + 130, WindowHeight / 8, 0x198, 30, true, largeText, SharpDX.Color.Red);
+                    solidColorBrush.Color = new SharpDX.Color(40, 40, 40, 150);
+                    device.FillRectangle(MakeRectangle((WindowWidth / 2) - 130.5f, WindowHeight / 8 + 1, 274f, 29f), solidColorBrush);
+                    solidColorBrush.Color = SharpDX.Color.Gray;
+                    device.DrawRectangle(MakeRectangle((WindowWidth / 2) - 131.5f, WindowHeight / 8 + 1, 275f, 30f), solidColorBrush);
+                    guiComponents.DrawText("PROXIMITY WARNING", (WindowWidth / 2) - 25, WindowHeight / 8 - 4, 0x198, 30, true, largeText, SharpDX.Color.Red);
+                    guiComponents.DrawText(((num3 > 0f) ? ("x" + num3) : ("x1")), (WindowWidth / 2) + 130, WindowHeight / 8 - 4, 0x198, 30, true, largeText, SharpDX.Color.Red);
                 }
                 if (Settings.crossHair && Settings.guiDefinedCrosshair)
                 {
@@ -653,7 +697,8 @@ namespace MemHack
             guiComponents.DrawHackMenu();
             guiComponents.DrawPlayerSearch();
             guiComponents.DrawTextBoxes();
-            guiComponents.DrawText("External Multihack by Slyth", 0x17, 0, 300, 20, false, medSmallText2, SharpDX.Color.LightGray);
+            if (LockedOnPlayer != null && Keyboard.IsKeyDown(Keys.LShiftKey) && (LockedOnPlayer.Distance_Crosshair < 50 || LockedOnPlayer.InVehicle)) guiComponents.DrawLockedOnPlayerInfo(LockedOnPlayer);
+            guiComponents.DrawText("External Multihack by Slyth", Width - 167, Height - 20, 300, 20, false, medSmallText2, SharpDX.Color.LightGray);
 
             if (LocalPlayer.Health > 0f)
             {
@@ -666,11 +711,12 @@ namespace MemHack
                     }
                 }
                 solidColorBrush.Color = new SharpDX.Color(40, 40, 40, 150);
-                device.FillRectangle(MakeRectangle((WindowWidth / 2) - 102.5f, 38.5f, 214f, 29f), solidColorBrush);
+                device.FillRectangle(MakeRectangle((WindowWidth / 2) - 102.5f, 16.5f, 214f, 29f), solidColorBrush);
                 solidColorBrush.Color = SharpDX.Color.Gray;
-                device.DrawRectangle(MakeRectangle((WindowWidth / 2) - 102.5f, 38.5f, 215f, 30f), solidColorBrush);
-                guiComponents.DrawText("Closest enemy is " + num7 + " meters away", (WindowWidth / 2) + 0x5f, 40, 0x1a2, 30, true, medSmallText2, SharpDX.Color.Red);
+                device.DrawRectangle(MakeRectangle((WindowWidth / 2) - 102.5f, 16.5f, 215f, 30f), solidColorBrush);
+                guiComponents.DrawText("Closest enemy is " + num7 + " meters away", (WindowWidth / 2) + 0x5f, 18, 0x1a2, 30, true, medSmallText2, SharpDX.Color.Red);
             }
+
             device.EndDraw();
         }
 
