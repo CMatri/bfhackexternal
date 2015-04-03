@@ -1027,7 +1027,7 @@ namespace MemHack
         private Process CurProcess;
         private IntPtr ProcessHandle;
         private string ProcessName;
-        private int ProcessID;
+        public int ProcessID;
         public IntPtr BaseModule;
 
         // Destruktor

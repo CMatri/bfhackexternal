@@ -52,6 +52,10 @@ namespace MemHack
 
     public partial class Overlay
     {
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern int GetWindowThreadProcessId(IntPtr handle, out int processId);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        private static extern IntPtr GetForegroundWindow();
         [DllImport("user32.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Auto)]
         public static extern int CallNextHookEx(int idHook, int nCode, IntPtr wParam, IntPtr lParam);
         [DllImport("dwmapi.dll")]
@@ -456,7 +460,7 @@ namespace MemHack
 
         private Vector3 aimTo;
 
-        public void Render()
+        public void Render(bool focus)
         {
             long num2;
             Vector3D vectord;
@@ -466,6 +470,11 @@ namespace MemHack
             device.BeginDraw();
             device.Clear(new Color4(0f, 0f, 0f, 0f));
 
+            if (!focus)
+            {
+                device.EndDraw();
+                return;
+            }
             //guiComponents.DrawBitmap(test, MakeRectangle(200, 200, 26, 32), (float)(LocalPlayer.Yaw));
 
             if (Settings.ESPHead)
@@ -925,7 +934,9 @@ namespace MemHack
         {
             if (UpdateStats())
             {
-                Render();
+                int activeProcId;
+                GetWindowThreadProcessId(GetForegroundWindow(), out activeProcId);
+                Render(activeProcId == Mem.ProcessID);
             }
             else
             {
