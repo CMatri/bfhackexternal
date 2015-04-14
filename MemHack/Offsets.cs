@@ -17,6 +17,7 @@ namespace MemHack
         public static Int64 StrangeJD62 = 0x1424871e0; // MAIN ADDRESS
         public static Int64 StrangePlayer = 0x01E0; // StrangePtr->ClientPlayer
         public static Int64 TypeInfoClientVehicleEntity = 0x1427FAE60; // MAIN TYPE INFO ADDRESS
+        public static Int64 LocalRenderer = 0x14247fea0L;
     }
 
     public struct sOffsets

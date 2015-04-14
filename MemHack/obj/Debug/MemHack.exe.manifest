@@ -54,14 +54,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MemHack.exe" size="82944">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MemHack.exe" size="84992">
       <assemblyIdentity name="MemHack" version="1.0.0.0" language="neutral" processorArchitecture="amd64" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>ABVMxphAfn2538/T3TXL0d3Y6B3/dRzsoCvacvc/6tA=</dsig:DigestValue>
+        <dsig:DigestValue>YnSq87YD4yATVPpNPUBOFplh3fiM0EZRuUmlglLU1Mk=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

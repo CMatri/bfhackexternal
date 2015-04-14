@@ -36,7 +36,9 @@ namespace MemHack
         {
             public Vector2D Pos;
             public int Type;
-            public Color Color;
+            public float Rotation;
+            public int Team;
+            public Player Owner;
         }
 
         public GuiComponents(Overlay overlay)
@@ -173,7 +175,9 @@ namespace MemHack
                 //overlay.device.DrawLine(new Vector2((X + (Width / 2)) + 6f, Y), new Vector2(X + 4f, Y), overlay.solidColorBrush);
                 //overlay.device.DrawLine(new Vector2(X, (Y - (Height / 2)) - 6f), new Vector2(X, Y - 4f), overlay.solidColorBrush);
                 //overlay.device.DrawLine(new Vector2(X, (Y + (Height / 2)) + 6f), new Vector2(X, Y + 4f), overlay.solidColorBrush);
-                DrawBitmap(overlay.crosshair, overlay.MakeRectangle(overlay.Width / 2 - 32 / 2, overlay.Height / 2 - 32 / 2, 32, 32), 0);
+
+                if (overlay.isAimbotting) DrawBitmap(overlay.crosshairLocked, overlay.MakeRectangle(overlay.Width / 2 - 32 / 2, overlay.Height / 2 - 32 / 2, 32, 32), 0);
+                else DrawBitmap(overlay.crosshairUnlocked, overlay.MakeRectangle(overlay.Width / 2 - 32 / 2, overlay.Height / 2 - 32 / 2, 32, 32), 0);
             }
             else
             {
@@ -252,8 +256,8 @@ namespace MemHack
                 DrawGuiButton((rectangle.X + rectangle.Width) - 0x16, rectangle.Y + 0xe0, 12, 12, ref Settings.ESPVehicle, false);
                 DrawText("Entity ESP", rectangle.X + 10, rectangle.Y + 0xec, 200, 20, false, overlay.medSmallText2, Color.LightGray);
                 DrawGuiButton((rectangle.X + rectangle.Width) - 0x16, rectangle.Y + 0xf2, 12, 12, ref Settings.ESPEntities, false);
-                DrawText("Entity ESP", rectangle.X + 10, rectangle.Y + 0xfe, 200, 20, false, overlay.medSmallText2, Color.LightGray);
-                DrawGuiButton((rectangle.X + rectangle.Width) - 0x16, rectangle.Y + 260, 12, 12, ref Settings.ESPEntities, false);
+                DrawText("Smooth Bot", rectangle.X + 10, rectangle.Y + 0xfe, 200, 20, false, overlay.medSmallText2, Color.LightGray);
+                DrawGuiButton((rectangle.X + rectangle.Width) - 0x16, rectangle.Y + 260, 12, 12, ref Settings.smoothBot, false);
             }
         }
 
@@ -303,7 +307,7 @@ namespace MemHack
                 overlay.device.DrawEllipse(new Ellipse(radar.Center, 4f, 4f), overlay.solidColorBrush);
                 foreach (RadarData data in toDrawOnRadar)
                 {
-                    DrawOnRadar(data.Pos, radar, data.Color, data.Type);
+                    DrawOnRadar(data.Pos, radar, data.Team, data.Rotation, data.Type, data.Owner);
                 }
             }
             overlay.solidColorBrush.Color = color;
@@ -311,25 +315,28 @@ namespace MemHack
 
         public void DrawLockedOnPlayerInfo(Player p)
         {
-            Vector3D headPos = overlay.WorldToScreen(p.Skeleton.BoneHead);
-            Vector2D drawPos = new Vector2D(headPos.X + 20, headPos.Y);
-            Color drawColor = p.IsOccluded ? Color.Orange : Color.LimeGreen;
+            if (p.Skeleton.BoneHead.X + p.Skeleton.BoneHead.Y + p.Skeleton.BoneHead.Z > 0.1f)
+            {
+                Vector3D headPos = overlay.WorldToScreen(p.Skeleton.BoneHead);
+                Vector2D drawPos = new Vector2D(headPos.X + 20, headPos.Y);
+                Color drawColor = p.IsOccluded ? Color.Orange : Color.LimeGreen;
 
-            DrawText(p.Name, (int)drawPos.X, (int)drawPos.Y - 20, 400, 20, false, overlay.medSmallText2, drawColor);
-            DrawText("Distance: " + (int)p.Distance_3D, (int)drawPos.X, (int)drawPos.Y, 400, 20, false, overlay.medSmallText2, drawColor);
-            //DrawText("Health: " + (int)p.Health + "/" + (int)p.MaxHealth, (int)drawPos.X, (int)drawPos.Y + 20, 400, 20, false, overlay.medSmallText2, Color.Wheat);
-            DrawHealthBar((int)drawPos.X, (int)drawPos.Y + 25, 80, 5, (int) p.Health, (int) p.MaxHealth, false);
+                DrawText(p.Name, (int)drawPos.X, (int)drawPos.Y - 20, 400, 20, false, overlay.medSmallText2, drawColor);
+                DrawText("Distance: " + (int)p.Distance_3D, (int)drawPos.X, (int)drawPos.Y, 400, 20, false, overlay.medSmallText2, drawColor);
+                //DrawText("Health: " + (int)p.Health + "/" + (int)p.MaxHealth, (int)drawPos.X, (int)drawPos.Y + 20, 400, 20, false, overlay.medSmallText2, Color.Wheat);
+                DrawHealthBar((int)drawPos.X, (int)drawPos.Y + 25, 80, 5, (int)p.Health, (int)p.MaxHealth, false);
+            }
         }
 
         public void DrawEntities()
         {
-            DrawClientEntity(0x142851810L, 0x220L, new Vector3D(-0.125f, -0.045f, -0.125f), new Vector3D(0.125f, 0.045f, 0.125f), Color.Purple, Color.Purple);
-            DrawClientEntity(0x1428516d0L, 0x220L, new Vector3D(-0.05f, -0.05f, -0.05f), new Vector3D(0.05f, 0.05f, 0.05f), Color.Purple, Color.Purple);
-            DrawClientEntity(0x142851450L, 0x220L, new Vector3D(-0.3f, -0.1f, -0.3f), new Vector3D(0.3f, 0.5f, 0.3f), Color.Plum, Color.Plum);
-            DrawClientEntity(0x142788790L, 0x220L, new Vector3D(-0.25f, -0.25f, -0.25f), new Vector3D(0.25f, 0.25f, 0.25f), Color.Purple, Color.Purple);
+            DrawClientEntity(0x142851810L, 0x220L, new Vector3D(-0.125f, -0.045f, -0.125f), new Vector3D(0.125f, 0.045f, 0.125f), Color.Purple);
+            DrawClientEntity(0x1428516d0L, 0x220L, new Vector3D(-0.05f, -0.05f, -0.05f), new Vector3D(0.05f, 0.05f, 0.05f), Color.Purple);
+            DrawClientEntity(0x142851450L, 0x220L, new Vector3D(-0.3f, -0.1f, -0.3f), new Vector3D(0.3f, 0.5f, 0.3f), Color.Plum);
+            DrawClientEntity(0x142788790L, 0x220L, new Vector3D(-0.25f, -0.25f, -0.25f), new Vector3D(0.25f, 0.25f, 0.25f), Color.Purple);
         }
 
-        public void DrawClientEntity(long basePtr, long transOff, Vector3D min, Vector3D max, Color drawColor, Color radarColor)
+        public void DrawClientEntity(long basePtr, long transOff, Vector3D min, Vector3D max, Color drawColor)
         {
             long num = basePtr + 0x60L;
             long address = overlay.Mem.ReadInt64(num);
@@ -350,10 +357,12 @@ namespace MemHack
                     AxisAlignedBox aabb = new AxisAlignedBox();
                     aabb.Init(min, max);
                     aabb.Setup(origin, m);
-                    DrawAxisAlignedBoundingBox(new Player(), aabb, drawColor, true);
+                    DrawAxisAlignedBoundingBox(new Player(), aabb, false, drawColor, true);
                     data.Pos = new Vector2D(overlay.LocalPlayer.Position.X - origin.X, overlay.LocalPlayer.Position.Z - origin.Z);
-                    data.Color = radarColor;
-                    data.Type = 0;
+                    data.Team = 3;
+                    data.Type = 2;
+                    data.Rotation = 0;
+                    data.Owner = null;
                     toDrawOnRadar.Add(data);
                     address = overlay.Mem.ReadInt64(address);
                 }
@@ -378,7 +387,7 @@ namespace MemHack
             Vector3D rightFootBone = overlay.WorldToScreen(p.Skeleton.BoneRightFoot);
             if (overlay.CheckVectorIsZero(headBone, neckBone, leftShoulderBone, rightShoulderBone, leftElbowRollBone, rightElbowRollBone, leftHandBone, rightHandBone, spineBone, leftKneeBone, rightKneeBone, leftFootBone, rightFootBone) && p.IsValid)
             {
-                overlay.solidColorBrush.Color = new Color(0xd9, 0x7c, 50);
+                overlay.solidColorBrush.Color = Color.Orange;
                 overlay.setBrushAlpha(0.5f);
                 overlay.device.DrawLine(new Vector2(headBone.X, headBone.Y), new Vector2(leftShoulderBone.X, leftShoulderBone.Y), overlay.solidColorBrush, 3f);
                 overlay.device.DrawLine(new Vector2(neckBone.X, neckBone.Y), new Vector2(leftShoulderBone.X, leftShoulderBone.Y), overlay.solidColorBrush, 3f);
@@ -400,9 +409,8 @@ namespace MemHack
             textBoxes.Add(new TextBox(X, Y, Width, Name, Text));
         }
 
-        public void DrawOnRadar(Vector2D pos, Rectangle radar, Color col, int type = 0)
+        public void DrawOnRadar(Vector2D pos, Rectangle radar, int team, float rotation, int type = 0, Player player = null)
         {
-            Color4 color = overlay.solidColorBrush.Color;
             pos = new Vector2D(pos.X / 0.75f, pos.Y / 0.75f);
             Vector2 center = new Vector2(radar.Center.X + pos.X, radar.Center.Y + pos.Y);
             float num = -overlay.LocalPlayer.Yaw;
@@ -414,37 +422,26 @@ namespace MemHack
             center.Y = radar.Center.Y + ((float)((num4 * num3) + (num5 * num2)));
             if (((Math.Abs(center.X) < (radar.Width + radar.X)) && (Math.Abs(center.X) > radar.X)) && ((Math.Abs(center.Y) < (radar.Height + radar.Y)) && (Math.Abs(center.Y) > radar.Y)))
             {
-                Color white = Color.White;
-                white.A = 0xff;
-                overlay.solidColorBrush.Color = (Color4)white;
                 if (type == 0)
                 {
-                    overlay.device.DrawEllipse(new Ellipse(new Vector2(center.X, center.Y), Settings.minimapPlayerRad, Settings.minimapPlayerRad), overlay.solidColorBrush);
+                    //overlay.device.DrawEllipse(new Ellipse(new Vector2(center.X, center.Y), Settings.minimapPlayerRad, Settings.minimapPlayerRad), overlay.solidColorBrush);
+                    if (team == overlay.LocalPlayer.Team) DrawBitmap(overlay.playerFriendly, overlay.MakeRectangle(center.X - 6, center.Y - 6, 12, 12), rotation);
+                    else DrawBitmap(overlay.playerEnemy, overlay.MakeRectangle(center.X - 6, center.Y - 6, 12, 12), rotation);
                 }
                 else if (type == 1)
                 {
-                    overlay.device.DrawRectangle(new RectangleF(center.X - ((Settings.minimapPlayerRad * 3) / 2), center.Y - ((Settings.minimapPlayerRad * 3) / 2), (Settings.minimapPlayerRad * 3), (Settings.minimapPlayerRad * 3)), overlay.solidColorBrush);
+                    //overlay.device.DrawRectangle(new RectangleF(center.X - ((Settings.minimapPlayerRad * 3) / 2), center.Y - ((Settings.minimapPlayerRad * 3) / 2), (Settings.minimapPlayerRad * 3), (Settings.minimapPlayerRad * 3)), overlay.solidColorBrush);
+                    if (player.Team != overlay.LocalPlayer.Team)
+                        DrawBitmap(overlay.genericVehicle, overlay.MakeRectangle(center.X - 4, center.Y - 4, 8, 8), 0);
+                    else
+                        DrawBitmap(overlay.genericVehicleFriendly, overlay.MakeRectangle(center.X - 4, center.Y - 4, 8, 8), 0);
                 }
                 else if (type == 2)
                 {
-                    overlay.device.DrawEllipse(new Ellipse(new Vector2(center.X - (Settings.minimapPlayerRad / 4), center.Y - (Settings.minimapPlayerRad / 4)), (Settings.minimapPlayerRad / 2), (Settings.minimapPlayerRad / 2)), overlay.solidColorBrush);
-                }
-                col.A = 0xff;
-                overlay.solidColorBrush.Color = (Color4)col;
-                if (type == 0)
-                {
-                    overlay.device.FillEllipse(new Ellipse(center, Settings.minimapPlayerRad, Settings.minimapPlayerRad), overlay.solidColorBrush);
-                }
-                else if (type == 1)
-                {
-                    overlay.device.FillRectangle(new RectangleF(center.X - ((Settings.minimapPlayerRad * 3) / 2), center.Y - ((Settings.minimapPlayerRad * 3) / 2), (Settings.minimapPlayerRad * 3), (Settings.minimapPlayerRad * 3)), overlay.solidColorBrush);
-                }
-                else if (type == 2)
-                {
-                    overlay.device.DrawEllipse(new Ellipse(new Vector2(center.X - (Settings.minimapPlayerRad / 4), center.Y - (Settings.minimapPlayerRad / 4)), (Settings.minimapPlayerRad / 2), (Settings.minimapPlayerRad / 2)), overlay.solidColorBrush);
+                    //overlay.device.DrawEllipse(new Ellipse(new Vector2(center.X - (Settings.minimapPlayerRad / 4), center.Y - (Settings.minimapPlayerRad / 4)), (Settings.minimapPlayerRad / 2), (Settings.minimapPlayerRad / 2)), overlay.solidColorBrush);
+                    DrawBitmap(overlay.entity, overlay.MakeRectangle(center.X - 4, center.Y - 4, 8, 8), 0);
                 }
             }
-            overlay.solidColorBrush.Color = color;
         }
 
         public void DrawText(string message, int x, int y, int W, int H, bool center, TextFormat format, Color color)
@@ -537,7 +534,7 @@ namespace MemHack
             DrawText("Watching You!", X + 5, Y + 0x23, 150, 20, false, overlay.smallText, Color.White);
         }
 
-        public void DrawAxisAlignedBoundingBox(Player p, AxisAlignedBox aabb = null, Color col = new Color(), bool c = false)
+        public void DrawAxisAlignedBoundingBox(Player p, AxisAlignedBox aabb = null, bool isVehicle = false, Color drawColor = new Color(), bool c = false)
         {
             if (aabb == null)
             {
@@ -563,25 +560,22 @@ namespace MemHack
                     p.SoldierTransform = new Matrix4x4(vals);
                 }
             }
-            if (!c)
+            if (p.Team == overlay.LocalPlayer.Team)
             {
-                if (p.Team == overlay.LocalPlayer.Team)
-                {
-                    overlay.solidColorBrush.Color = (Color4)Color.Green;
-                }
-                else if (!p.IsOccluded)
-                {
-                    overlay.solidColorBrush.Color = (Color4)Color.Yellow;
-                }
-                else
-                {
-                    overlay.solidColorBrush.Color = (Color4)Color.Red;
-                }
+                overlay.solidColorBrush.Color = isVehicle ? Color.CadetBlue : Color.LimeGreen;
+            }
+            else if (!p.IsOccluded)
+            {
+                overlay.solidColorBrush.Color = Color.Yellow;
             }
             else
             {
-                overlay.solidColorBrush.Color = (Color4)col;
+                overlay.solidColorBrush.Color = isVehicle ? Color.OrangeRed : Color.Red;
             }
+
+            if (c)
+                overlay.solidColorBrush.Color = drawColor;
+
             for (int i = 0; i < 8; i++)
             {
                 aabb.corners[i] = overlay.WorldToScreen(aabb.corners[i]);
@@ -590,6 +584,8 @@ namespace MemHack
                     return;
                 }
             }
+
+            overlay.setBrushAlpha(0.5f);
             overlay.device.DrawLine(new Vector2(aabb.corners[0].X, aabb.corners[0].Y), new Vector2(aabb.corners[1].X, aabb.corners[1].Y), overlay.solidColorBrush);
             overlay.device.DrawLine(new Vector2(aabb.corners[5].X, aabb.corners[5].Y), new Vector2(aabb.corners[6].X, aabb.corners[6].Y), overlay.solidColorBrush);
             overlay.device.DrawLine(new Vector2(aabb.corners[0].X, aabb.corners[0].Y), new Vector2(aabb.corners[5].X, aabb.corners[5].Y), overlay.solidColorBrush);

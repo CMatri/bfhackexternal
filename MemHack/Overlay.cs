@@ -24,6 +24,7 @@ namespace MemHack
     public static class Settings
     {
         public static bool aimbot;
+        public static bool smoothBot = false;
 
         public static bool ESPAlways2D = true;
         public static bool ESPBox = true;
@@ -89,7 +90,7 @@ namespace MemHack
         public WindowRenderTarget device;
         private HwndRenderTargetProperties renderProperties;
         private IntPtr HWND_TOPMOST = new IntPtr(-1);
-        private HookProc MouseHookProcedure;
+        private Overlay.HookProc MouseHookProcedure;
         private Thread keyBoardThread;
         private Thread mouseThread;
 
@@ -117,8 +118,16 @@ namespace MemHack
         private Update update;
         private Matrix4x4 viewMatrix;
 
-        private SharpDX.Direct2D1.Bitmap test;
-        public SharpDX.Direct2D1.Bitmap crosshair;
+        public SharpDX.Direct2D1.Bitmap crosshairLocked;
+        public SharpDX.Direct2D1.Bitmap crosshairUnlocked;
+        public SharpDX.Direct2D1.Bitmap playerFriendly;
+        public SharpDX.Direct2D1.Bitmap playerEnemy;
+        public SharpDX.Direct2D1.Bitmap entity;
+        public SharpDX.Direct2D1.Bitmap genericVehicle;
+        public SharpDX.Direct2D1.Bitmap genericVehicleFriendly;
+        public Dictionary<String, SharpDX.Direct2D1.Bitmap> vehicleTextures;
+
+        public bool isAimbotting;
 
         public Overlay()
         {
@@ -146,11 +155,13 @@ namespace MemHack
                 keyBoardThread.Join();
                 return false;
             }
+
             Mouse.Update();
             players.Clear();
             enemys.Clear();
             spectators.Clear();
             guiComponents.toDrawOnRadar.Clear();
+
             if (Keyboard.IsKeyDown(Keys.C) && (lastTap == 0f))
             {
                 Settings.aimbot = !Settings.aimbot;
@@ -160,13 +171,22 @@ namespace MemHack
             {
                 lastTap--;
             }
+
             long num = Mem.ReadInt64(sAddresses.ClientGameContext);
+            if (!IsValidPtr(num)) return true;
             long num2 = Mem.ReadInt64(num + sOffsets.ClassClientPlayerManager);
+            if (!IsValidPtr(num2)) return true;
             long pClient = Mem.ReadInt64(num2 + sOffsets.ClientPlayerManger.LocalPlayer);
+            if (!IsValidPtr(pClient)) return true;
             long num4 = Mem.ReadInt64(Mem.ReadInt64(pClient + 0x14b0L)) - 8L;
+            if (!IsValidPtr(num4)) return true;
             long num5 = Mem.ReadInt64(num4 + sOffsets.Player.Soldier.ClassHealth);
+            if (!IsValidPtr(num5)) return true;
             long num6 = Mem.ReadInt64(num4 + sOffsets.Player.Soldier.ClassPlayerPosition);
+            if (!IsValidPtr(num6)) return true;
             long num7 = Mem.ReadInt64(num4 + sOffsets.Player.Soldier.ClassClientRagDollComponent);
+            if (!IsValidPtr(num7)) return true;
+
             viewMatrix = getViewMatrix();
             LocalPlayer.Health = Mem.ReadFloat(num5 + sOffsets.Player.Soldier.PlayerHealth.CurPlayerHealth);
             LocalPlayer.Team = Mem.ReadInt32(pClient + sOffsets.Player.Team);
@@ -200,12 +220,31 @@ namespace MemHack
             LocalPlayer.Position.X = Mem.ReadFloat(num6 + sOffsets.Player.Soldier.PlayerPosition.XPlayer);
             LocalPlayer.Position.Y = Mem.ReadFloat(num6 + sOffsets.Player.Soldier.PlayerPosition.YPlayer);
             LocalPlayer.Position.Z = Mem.ReadFloat(num6 + sOffsets.Player.Soldier.PlayerPosition.ZPlayer);
+            long pLocalRenderer = Mem.ReadInt64(sAddresses.LocalRenderer);
+            long pLocalRenderView = Mem.ReadInt64(pLocalRenderer + (long)96);
+            LocalPlayer.Fov.X = Mem.ReadFloat(pLocalRenderView + 0x250);
+            LocalPlayer.Fov.Y = Mem.ReadFloat(pLocalRenderView + (long)180);
 
             if (!LocalPlayer.InVehicle)
             {
                 LocalPlayer.Velocity.X = Mem.ReadFloat(num6 + 80L);
                 LocalPlayer.Velocity.Y = Mem.ReadFloat(num6 + 0x54L);
                 LocalPlayer.Velocity.Z = Mem.ReadFloat(num6 + 0x58L);
+
+                Int64 SuperClimbOffset = Mem.ReadInt64(0x14284f860L);
+                if (IsValidPtr(SuperClimbOffset))
+                {
+                    Int64 SuperClimbOffset1 = Mem.ReadInt64(SuperClimbOffset + 0x770);
+                    if (IsValidPtr(SuperClimbOffset1))
+                    {
+                        Int64 SuperClimbOffset2 = Mem.ReadInt64(SuperClimbOffset1 + 0x10);
+                        if (IsValidPtr(SuperClimbOffset2))
+                        {
+                            Mem.WriteFloat(SuperClimbOffset2 + 0x250, Settings.UltraHax ? 300.0f : 1.5f);
+                        }
+                    }
+                }
+
                 if (num10 < 2)
                 {
                     //Console.WriteLine(num12.ToString("X"));
@@ -264,7 +303,7 @@ namespace MemHack
             LocalPlayer.Vehicle.Z = matrixx.M43;
             LocalPlayer.SoldierTransform = matrixx;
             long num29 = Mem.ReadInt64(pVehicle + 0x30L);
-            LocalPlayer.VehicleName = Mem.ReadString(Mem.ReadInt64(num29 + 240L), 13L);
+            LocalPlayer.VehicleName = Mem.ReadString(Mem.ReadInt64(num29 + 240L), 29L);
             long num30 = Mem.ReadInt64(num12 + sOffsets.WeaponFiring.ClassPrimaryFire);
             long num31 = Mem.ReadInt64(num30 + sOffsets.WeaponFiring.PrimaryFire.ClassShotConfigData);
             if (num10 == 0)
@@ -306,6 +345,12 @@ namespace MemHack
                         LocalPlayer.BulletSpeed = Mem.ReadFloat(num33 + 0x88L);
                         LocalPlayer.Sway.X = Mem.ReadFloat(num15 + 40L);
                         LocalPlayer.Sway.Y = Mem.ReadFloat(num15 + 0x2cL);
+
+                        if (Settings.UltraHax)
+                        {
+                            Mem.WriteFloat(num34 + 0x130, 0.0f);
+                            Mem.WriteFloat(num33 + 0x88, 50000.0f);
+                        }
                     }
                 }
             }
@@ -428,16 +473,17 @@ namespace MemHack
             {
                 Player player2 = DistanceCrosshairSortPlayers(enemys);
                 Vector2 onScreen = new Vector2();
-                ViewAngle aimHead = GetAimHead(player2, ref onScreen);
+                ViewAngle aimHead = GetAimHead(player2, true, ref onScreen);
 
+                LockedOnPlayer = player2;
                 if (player2 == null) return true;
                 aimTo = new Vector3(onScreen, player2.IsOccluded ? 0 : 1);
-                LockedOnPlayer = player2;
 
                 //Console.WriteLine(Distance_Crosshair(new Vector2D(onScreen.X, onScreen.Y)));
                 if (Settings.aimbot && !LocalPlayer.InVehicle && (AimLevel < 1f) && (player2 != null) && (((!player2.IsOccluded || (player2.InVehicle)) && (aimHead != null)) && (player2.Distance_Crosshair < (player2.InVehicle ? (160) : (Settings.UltraHax ? 280 : 90)))))
                 {
-                    if (Math.Abs(Distance_Crosshair(new Vector2D(onScreen.X, onScreen.Y))) < 15 || player2.InVehicle)
+                    isAimbotting = true;
+                    if (Math.Abs(Distance_Crosshair(new Vector2D(onScreen.X, onScreen.Y))) < 15 || player2.InVehicle && Settings.smoothBot)
                     {
                         Vector2 vector = new Vector2(LerpRadians(a, aimHead.Yaw, 0.855f), LerpRadians(num52, aimHead.Pitch, 0.855f));
                         Mem.WriteAngle(vector.X, vector.Y);
@@ -448,13 +494,18 @@ namespace MemHack
                         Mem.WriteAngle(vector.X, vector.Y);
                     }
 
-                    if (Settings.UltraHax)
+                    if (Settings.UltraHax && !Settings.smoothBot)
                         Mem.WriteAngle(aimHead.Yaw, aimHead.Pitch);
 
                 }
+                else
+                    isAimbotting = false;
             }
             else
+            {
                 aimTo = new Vector3(-200, -200, 0);
+                isAimbotting = false;
+            }
             return true;
         }
 
@@ -492,15 +543,15 @@ namespace MemHack
                     box.Init(vectord, vectord2);
                     box.Setup(LocalPlayer.Position, LocalPlayer.SoldierTransform, true, 0f, 0f, 0f);
                     color2 = new SharpDX.Color();
-                    guiComponents.DrawAxisAlignedBoundingBox(LocalPlayer, box, color2, false);
+                    guiComponents.DrawAxisAlignedBoundingBox(LocalPlayer, box, false, color2, false);
                     if (LocalPlayer.VehicleName.Contains("heli"))
                     {
                         color2 = new SharpDX.Color();
-                        guiComponents.DrawAxisAlignedBoundingBox(LocalPlayer, null, color2, false);
+                        guiComponents.DrawAxisAlignedBoundingBox(LocalPlayer, null, false, color2, false);
                     }
                 }
             }
-            if (((LocalPlayer.Position.X + LocalPlayer.Position.Y) + LocalPlayer.Position.Z) != 0f)
+            if (!IsOnDeployScreen() && LocalPlayer.IsValid && LocalPlayer.Position.X != 0.0f && LocalPlayer.Position.Y != 0.0f && LocalPlayer.Position.Z != 0.0f && LocalPlayer.Health > 0 && IsValidPtr(LocalPlayer.pClient))
             {
                 SharpDX.Rectangle rectangle = new SharpDX.Rectangle();
                 if (Settings.ESPEntities)
@@ -513,7 +564,7 @@ namespace MemHack
 
                 foreach (Player player in spectators)
                 {
-                    if (Mem.ReadInt64(player.pOwnerRenderView + 0x00F8) == LocalPlayer.pClient && player.IsSpectator)
+                    if (Mem.ReadInt64(player.pOwnerRenderView + 0x00F8) == LocalPlayer.pClient)
                     {
                         solidColorBrush.Color = new SharpDX.Color(40, 40, 40, 150);
                         device.FillRectangle(MakeRectangle((WindowWidth / 2) - 121.5f, 76.5f, 254f, 29f), solidColorBrush);
@@ -539,7 +590,7 @@ namespace MemHack
                         float num6 = vectord3.X - (num5 / 2f);
                         if (player.Team == LocalPlayer.Team)
                         {
-                            solidColorBrush.Color = SharpDX.Color.Green;
+                            solidColorBrush.Color = SharpDX.Color.LightGreen;
                         }
                         else if (!player.IsOccluded)
                         {
@@ -547,20 +598,24 @@ namespace MemHack
                         }
                         else
                         {
-                            solidColorBrush.Color = SharpDX.Color.Red;
+                            solidColorBrush.Color = SharpDX.Color.OrangeRed;
                         }
                         rectangle.X = (int)num6;
                         rectangle.Y = (int)vectord3.Y;
                         rectangle.Width = (int)num5;
                         rectangle.Height = (int)num4;
+
+                        device.StrokeWidth = 1.0f;
+
                         if (Settings.playerSearch && (player.Name.Contains(guiComponents.GetTextBox("Search").Text) && (guiComponents.GetTextBox("Search").Text.Length != 0)))
                         {
                             color = solidColorBrush.Color;
                             solidColorBrush.Color = SharpDX.Color.Pink;
                             device.DrawLine(new Vector2((Width / 2), 0f), new Vector2(vectord3.X, vectord3.Y), solidColorBrush);
-                            guiComponents.DrawText("Player Found!", 100, 0, 300, 20, false, medSmallText2, SharpDX.Color.LightGray);
+                            guiComponents.DrawText("Player Found!", Width / 2 - 170 / 2, Height - 20, 300, 20, false, medSmallText2, SharpDX.Color.LightGray);
                             solidColorBrush.Color = color;
                         }
+
                         if (!player.InVehicle)
                         {
                             if ((((player.Team != LocalPlayer.Team) && (player.pClient != LocalPlayer.pClient)) && (Settings.ESPSkeleton && player.IsValid)) && LocalPlayer.IsValid)
@@ -571,14 +626,13 @@ namespace MemHack
                             }
                             if (Settings.ESPHealth)
                             {
-                                guiComponents.DrawHealthBar((((int)vectord4.X) - ((int)(num5 / 2f))) - 8, ((int)vectord4.Y) - ((int)num4), 5, (int)num4, (int)player.Health, (int)player.MaxHealth, true);
+                                guiComponents.DrawHealthBar((int)num6, (int) vectord3.Y - 5, (int)num5, 5, (int)player.Health, (int)player.MaxHealth, false);
                             }
                             if (Settings.ESPBox)
                             {
                                 if (!((player.Distance_3D >= 100f) || Settings.ESPAlways2D))
                                 {
-                                    color2 = new SharpDX.Color();
-                                    guiComponents.DrawAxisAlignedBoundingBox(player, null, color2, false);
+                                    guiComponents.DrawAxisAlignedBoundingBox(player, null, false);
                                 }
                                 else
                                 {
@@ -589,8 +643,10 @@ namespace MemHack
                             if (!list.Contains(num))
                             {
                                 data.Pos = new Vector2D(LocalPlayer.Position.X - player.Position.X, LocalPlayer.Position.Z - player.Position.Z);
-                                data.Color = new SharpDX.Color(solidColorBrush.Color);
+                                data.Rotation = player.Yaw;
+                                data.Team = player.Team;
                                 data.Type = 0;
+                                data.Owner = player;
                                 guiComponents.toDrawOnRadar.Add(data);
                             }
                         }
@@ -603,15 +659,16 @@ namespace MemHack
                             if ((!list.Contains(num) && (player.VehicleEntry == 0f)) && IsValidPtr(num2))
                             {
                                 data.Pos = new Vector2D(LocalPlayer.Position.X - player.Position.X, LocalPlayer.Position.Z - player.Position.Z);
-                                data.Color = new SharpDX.Color(solidColorBrush.Color);
+                                data.Rotation = player.Yaw;
+                                data.Team = player.Team;
                                 data.Type = 1;
+                                data.Owner = player;
                                 guiComponents.toDrawOnRadar.Add(data);
                                 list.Add(num);
                                 box = new AxisAlignedBox();
                                 box.Init(vectord, vectord2);
                                 box.Setup(player.Vehicle, player.SoldierTransform, true, 0f, 0f, 0f);
-                                color2 = new SharpDX.Color();
-                                guiComponents.DrawAxisAlignedBoundingBox(player, box, color2, false);
+                                guiComponents.DrawAxisAlignedBoundingBox(player, box, true);
                             }
                             if (player.Team != LocalPlayer.Team)
                             {
@@ -625,11 +682,11 @@ namespace MemHack
                                 }
                                 if (Settings.ESPHealth)
                                 {
-                                    guiComponents.DrawHealthBar((((int)vectord4.X) - ((int)(num5 / 2f))) - 8, ((int)vectord4.Y) - ((int)num4), 5, (int)num4, (int)player.Health, (int)player.MaxHealth, true);
+                                    guiComponents.DrawHealthBar((int)num6, (int)vectord3.Y - 5, (int)num5, 5, (int)player.Health, (int)player.MaxHealth, false);
                                 }
                             }
                         }
-                        Vector3D vectord5 = WorldToScreen(player.Skeleton.BoneHead);
+
                         if (player.Team != LocalPlayer.Team)
                         {
                             if ((!player.IsOccluded && Settings.ESPHead) && (player.Distance_Crosshair < 110f))
@@ -672,7 +729,7 @@ namespace MemHack
                     guiComponents.DrawText("PROXIMITY WARNING", (WindowWidth / 2) - 25, WindowHeight / 8 - 4, 0x198, 30, true, largeText, SharpDX.Color.Red);
                     guiComponents.DrawText(((num3 > 0f) ? ("x" + num3) : ("x1")), (WindowWidth / 2) + 130, WindowHeight / 8 - 4, 0x198, 30, true, largeText, SharpDX.Color.Red);
                 }
-                if (Settings.crossHair && Settings.guiDefinedCrosshair)
+                if (Settings.crossHair && Settings.guiDefinedCrosshair && (!IsOnDeployScreen() || LocalPlayer.Health > 0))
                 {
                     guiComponents.DrawCrosshair((Width / 2), (Height / 2), 20, 20, SharpDX.Color.White, true);
                 }
@@ -706,7 +763,7 @@ namespace MemHack
             guiComponents.DrawHackMenu();
             guiComponents.DrawPlayerSearch();
             guiComponents.DrawTextBoxes();
-            if (LockedOnPlayer != null && Keyboard.IsKeyDown(Keys.LShiftKey) && (LockedOnPlayer.Distance_Crosshair < 50 || LockedOnPlayer.InVehicle)) guiComponents.DrawLockedOnPlayerInfo(LockedOnPlayer);
+            if (LockedOnPlayer != null && Keyboard.IsKeyDown(Keys.LShiftKey)) guiComponents.DrawLockedOnPlayerInfo(LockedOnPlayer);
             guiComponents.DrawText("External Multihack by Slyth", Width - 167, Height - 20, 300, 20, false, medSmallText2, SharpDX.Color.LightGray);
 
             if (LocalPlayer.Health > 0f)
@@ -729,14 +786,61 @@ namespace MemHack
             device.EndDraw();
         }
 
-        private Vector3 AimCorrection(Vector3 Velocity, Vector3 EnemyVelocity, Vector3 InVec, float Distance, float Speed, float Gravity)
+        private Vector3 AimCorrection(Vector3 enemyPos, Vector3 myPos, Vector3 Velocity, Vector3 EnemyVelocity, Vector3 InVec, float Distance, float Speed, float Gravity)
         {
             InVec += (EnemyVelocity * (Distance / Math.Abs(Speed)));
             InVec -= (Velocity * (Distance / Math.Abs(Speed)));
             float num = Math.Abs(Gravity);
             float num2 = Distance / Math.Abs(Speed);
             InVec.Y += ((0.5f * num) * num2) * num2;
+
             return InVec;
+
+            /*Vector3 predictedAimingPosition = enemyPos;
+            Matrix4x4 viewMatrixInverse = GetViewMatrixInverse();
+
+            // trans target position relate to local player's view position for simplifying equations
+            Vector3 p1 = enemyPos;
+            p1.X -= viewMatrixInverse.M41;
+            p1.Y -= viewMatrixInverse.M42;
+            p1.Z -= viewMatrixInverse.M43;
+
+            double a = Gravity * Gravity * 0.25;
+            double b = -Gravity * EnemyVelocity.Y;
+            double c = EnemyVelocity.X * EnemyVelocity.X + EnemyVelocity.Y * EnemyVelocity.Y + EnemyVelocity.Z * EnemyVelocity.Z - Gravity * p1.Y - Speed * Speed;
+            double d = 2.0 * (p1.X * EnemyVelocity.X + p1.Y * EnemyVelocity.Y + p1.Z * EnemyVelocity.Z);
+            double e = p1.X * p1.X + p1.Y * p1.Y + p1.Z * p1.Z;
+
+            // some unix guys will not afraid these two lines
+            double[] roots = new double[4];
+            uint num_roots = SolveQuartic(a, b, c, d, e, ref roots);
+
+            if (num_roots > 0)
+            {
+                // find the best predict hit time
+                // smallest 't' for guns, largest 't' for something like mortar with beautiful arcs
+                double hitTime = 0.0;
+                for (int i = 0; i < num_roots; ++i)
+                {
+                    if (roots[i] > 0.0 && (hitTime == 0.0 || roots[i] < hitTime))
+                        hitTime = roots[i];
+                }
+
+                if (hitTime > 0.0)
+                {
+                    // get predict bullet velocity vector at aiming direction
+                    double hitVelX = p1.X / hitTime + EnemyVelocity.X;
+                    double hitVelY = p1.Y / hitTime + EnemyVelocity.Y - 0.5 * Gravity * hitTime;
+                    double hitVelZ = p1.Z / hitTime + EnemyVelocity.Z;
+
+                    // finally, the predict aiming position in world space
+                    predictedAimingPosition.X = (float)(viewMatrixInverse.M41 + hitVelX * hitTime);
+                    predictedAimingPosition.Y = (float)(viewMatrixInverse.M42 + hitVelY * hitTime);
+                    predictedAimingPosition.Z = (float)(viewMatrixInverse.M43 + hitVelZ * hitTime);
+                }
+            }
+
+            return predictedAimingPosition;*/
         }
 
         public bool CheckVectorIsZero(params Vector3D[] v)
@@ -758,6 +862,29 @@ namespace MemHack
             float num = (vectord.X > CrosshairX) ? (vectord.X - CrosshairX) : (CrosshairX - vectord.X);
             float num2 = (vectord.Y > CrosshairX) ? (vectord.Y - CrosshairX) : (CrosshairY - vectord.Y);
             return (float)Math.Sqrt((double)((num * num) + (num2 * num2)));
+            Vector3 Origin = new Vector3();
+            Vector3 ShootSpace = new Vector3();
+
+            Origin = player.Skeleton.BoneHead.ToVector3();
+
+            Matrix4x4 mTmp = GetViewMatrixInverse();
+
+            ShootSpace.X = Origin.X - mTmp.M41;
+            ShootSpace.Y = Origin.Y - mTmp.M42;
+            ShootSpace.Z = Origin.Z - mTmp.M43;
+
+            ShootSpace = VectorNormalize(ShootSpace);
+
+            Vector3 vLeft = new Vector3(mTmp.M11, mTmp.M12, mTmp.M13);
+            float Yaw = (float)-Math.Asin(Vector3.Dot(vLeft, ShootSpace));
+            float YawDifference = LocalPlayer.Fov.Y / 4.0f - Yaw;
+
+            float RealDistance = (float)Math.Abs(Math.Sin(YawDifference) * player.Distance_3D);
+
+            // Console.WriteLine("Player: {0} Real distance: {1} Enemy distance: {2}", player.Name, RealDistance, player.Distance);
+            // Thread.Sleep(1000);
+
+            return RealDistance;
         }
 
         private float Distance_Crosshair(Vector2D vec)
@@ -780,7 +907,7 @@ namespace MemHack
         }
 
 
-        private ViewAngle GetAimHead(Player _EnemyPlayer, ref Vector2 onScreen)
+        private ViewAngle GetAimHead(Player _EnemyPlayer, bool onHead, ref Vector2 onScreen)
         {
             if (_EnemyPlayer == null) return new ViewAngle();
             if (_EnemyPlayer.Skeleton.BoneHead.X != 0 &&
@@ -788,10 +915,13 @@ namespace MemHack
                 _EnemyPlayer.Skeleton.BoneHead.Z != 0)
             {
                 Vector3 Space = new Vector3();
+                Vector3 boneAim = onHead ? new Vector3(_EnemyPlayer.Skeleton.BoneHead.X, _EnemyPlayer.Skeleton.BoneHead.Y, _EnemyPlayer.Skeleton.BoneHead.Z) : new Vector3(_EnemyPlayer.Skeleton.BoneSpine.X, _EnemyPlayer.Skeleton.BoneSpine.Y, _EnemyPlayer.Skeleton.BoneSpine.Z);
                 Vector3 Origin = AimCorrection(
+                    new Vector3(_EnemyPlayer.Position.X, _EnemyPlayer.Position.Y, _EnemyPlayer.Position.Z),
+                    new Vector3(LocalPlayer.Position.X, LocalPlayer.Position.Y, LocalPlayer.Position.Z),
                     new Vector3(LocalPlayer.Velocity.X, LocalPlayer.Velocity.Y, LocalPlayer.Velocity.Z),
                     new Vector3(_EnemyPlayer.Velocity.X, _EnemyPlayer.Velocity.Y, _EnemyPlayer.Velocity.Z),
-                    new Vector3(_EnemyPlayer.Skeleton.BoneHead.X, _EnemyPlayer.Skeleton.BoneHead.Y, _EnemyPlayer.Skeleton.BoneHead.Z),
+                   boneAim,
                     _EnemyPlayer.Distance_3D,
                     LocalPlayer.BulletSpeed,
                     LocalPlayer.BulletGravity
@@ -872,14 +1002,12 @@ namespace MemHack
             return Mem.ReadMatrix4x4(num2 + sOffsets.GameRenderer.RenderView.ViewMatrixInverse);
         }
 
-
-
         public bool IsKeyDown(int key)
         {
             return Convert.ToBoolean((int)(GetKeyState(key) & 0x8000));
         }
 
-        private bool IsOnDeployScreen()
+        public bool IsOnDeployScreen()
         {
             return (Mem.ReadByte(0x1421c1468L) == 1);
         }
@@ -914,6 +1042,111 @@ namespace MemHack
                 return num2;
             }
             return (num2 % num3);
+        }
+
+        private static uint SolveCubic(double[] coeff, ref double[] x)
+        {
+            /* Adjust coefficients */
+
+            double a1 = coeff[2] / coeff[3];
+            double a2 = coeff[1] / coeff[3];
+            double a3 = coeff[0] / coeff[3];
+
+            double Q = (a1 * a1 - 3 * a2) / 9;
+            double R = (2 * a1 * a1 * a1 - 9 * a1 * a2 + 27 * a3) / 54;
+            double Qcubed = Q * Q * Q;
+            double d = Qcubed - R * R;
+
+            /* Three real roots */
+
+            if (d >= 0)
+            {
+                double theta = Math.Acos(R / Math.Sqrt(Qcubed));
+                double sqrtQ = Math.Sqrt(Q);
+
+                x[0] = -2 * sqrtQ * Math.Cos(theta / 3) - a1 / 3;
+                x[1] = -2 * sqrtQ * Math.Cos((theta + 2 * Math.PI) / 3) - a1 / 3;
+                x[2] = -2 * sqrtQ * Math.Cos((theta + 4 * Math.PI) / 3) - a1 / 3;
+
+                return (3);
+            }
+
+            /* One real root */
+
+            else
+            {
+                double e = Math.Pow(Math.Sqrt(-d) + Math.Abs(R), 1.0 / 3.0);
+
+                if (R > 0)
+                {
+                    e = -e;
+                }
+
+                x[0] = (e + Q / e) - a1 / 3.0;
+
+                return (1);
+            }
+        }
+
+        public static uint SolveQuartic(double a, double b, double c, double d, double e, ref double[] x)
+        {
+            /* Adjust coefficients */
+
+            double a1 = d / e;
+            double a2 = c / e;
+            double a3 = b / e;
+            double a4 = a / e;
+
+            /* Reduce to solving cubic equation */
+
+            double q = a2 - a1 * a1 * 3 / 8;
+            double r = a3 - a1 * a2 / 2 + a1 * a1 * a1 / 8;
+            double s = a4 - a1 * a3 / 4 + a1 * a1 * a2 / 16 - 3 * a1 * a1 * a1 * a1 / 256;
+
+            double[] coeff_cubic = new double[4];
+            double[] roots_cubic = new double[3];
+            double positive_root = 0;
+
+            coeff_cubic[3] = 1;
+            coeff_cubic[2] = q / 2;
+            coeff_cubic[1] = (q * q - 4 * s) / 16;
+            coeff_cubic[0] = -r * r / 64;
+
+            uint nRoots = SolveCubic(coeff_cubic, ref roots_cubic);
+
+            for (int i = 0; i < nRoots; i++)
+            {
+                if (roots_cubic[i] > 0)
+                {
+                    positive_root = roots_cubic[i];
+                }
+            }
+
+            /* Reduce to solving two quadratic equations */
+
+            double k = Math.Sqrt(positive_root);
+            double l = 2 * k * k + q / 2 - r / (4 * k);
+            double m = 2 * k * k + q / 2 + r / (4 * k);
+
+            nRoots = 0;
+
+            if (k * k - l > 0)
+            {
+                x[nRoots + 0] = -k - Math.Sqrt(k * k - l) - a1 / 4;
+                x[nRoots + 1] = -k + Math.Sqrt(k * k - l) - a1 / 4;
+
+                nRoots += 2;
+            }
+
+            if (k * k - m > 0)
+            {
+                x[nRoots + 0] = +k - Math.Sqrt(k * k - m) - a1 / 4;
+                x[nRoots + 1] = +k + Math.Sqrt(k * k - m) - a1 / 4;
+
+                nRoots += 2;
+            }
+
+            return nRoots;
         }
 
         public SharpDX.RectangleF MakeRectangle(float X, float Y, float Width, float Height)
@@ -985,11 +1218,30 @@ namespace MemHack
             medText = new TextFormat(fontFactory, "Segoe UI", 18f);
             largeText = new TextFormat(fontFactory, "Segoe UI", 24f);
 
-            test = guiComponents.GetBitmap("player.png");
-            crosshair = guiComponents.GetBitmap("crosshair.png");
+            crosshairUnlocked = guiComponents.GetBitmap("crosshairUnlocked.png");
+            crosshairLocked = guiComponents.GetBitmap("crosshairLocked.png");
+            playerFriendly = guiComponents.GetBitmap("player.png");
+            playerEnemy = guiComponents.GetBitmap("enemy.png");
+            entity = guiComponents.GetBitmap("entity.png");
+            genericVehicle = guiComponents.GetBitmap("vehicle.png");
+            genericVehicleFriendly = guiComponents.GetBitmap("vehicleFriendly.png");
+
+            vehicleTextures = new Dictionary<string, SharpDX.Direct2D1.Bitmap>();
+
+            vehicleTextures.Add("heli.scout", guiComponents.GetBitmap("scoutHeli.png"));
+            vehicleTextures.Add("heli.attack", guiComponents.GetBitmap("attackHeli.png"));
+            vehicleTextures.Add("heli.transport", guiComponents.GetBitmap("supportHeli.png"));
+            vehicleTextures.Add("jeep.fast", guiComponents.GetBitmap("fastJeep.png"));
+            vehicleTextures.Add("quadbike", guiComponents.GetBitmap("fastBike.png"));
+            vehicleTextures.Add("tank.ifv", guiComponents.GetBitmap("tank.png"));
+            vehicleTextures.Add("tank", guiComponents.GetBitmap("tank.png"));
+            vehicleTextures.Add("himars", guiComponents.GetBitmap("ifv.png"));
+            vehicleTextures.Add("jeep.armored", guiComponents.GetBitmap("armoredJeep.png"));
+            vehicleTextures.Add("vehicles.jet", guiComponents.GetBitmap("attackJet.png"));
+            vehicleTextures.Add("jet.bomber", guiComponents.GetBitmap("bomberJet.png"));
 
             update = new Update(new EventHandler(onUpdate));
-            update.FPS = 100;
+            update.FPS = 1000;
             update.Start();
         }
 

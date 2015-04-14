@@ -72,6 +72,11 @@ namespace MemLibs
 
         public Vector3D Negate() { return new Vector3D(-X, -Y, -Z); }
 
+        public Vector3 ToVector3()
+        {
+            return new Vector3(X, Y, Z);
+        }
+
         public float GetLength(Vector3D _Object)
         {
             Vector3D Space = new Vector3D();

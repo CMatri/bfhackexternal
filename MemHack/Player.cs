@@ -38,6 +38,7 @@ namespace MemHack
         public Int64 pClient;
         public Int64 pVehicle;
         public Int64 pRenderView;
+        public Int64 pLocalRenderView;
         public Int64 pOwnerRenderView;
         public bool IsOccluded;
         public bool IsSpectator;
@@ -46,6 +47,7 @@ namespace MemHack
         public Vector3D Vehicle = new Vector3D();
         public Vector3D Velocity = new Vector3D();
         public Vector2D Sway = new Vector2D();
+        public Vector2D Fov = new Vector2D();
         public SkeletonStruct Skeleton = new SkeletonStruct();
         public Matrix4x4 SoldierTransform;
 
