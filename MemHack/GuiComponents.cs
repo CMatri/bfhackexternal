@@ -88,15 +88,15 @@ namespace MemHack
 
         public void DrawEsp(RectangleF rect)
         {
-            overlay.setBrushAlpha(0.5f);
-            overlay.device.DrawLine(new Vector2(rect.X, rect.Y), new Vector2(rect.X, rect.Y + (rect.Height / 4f)), overlay.solidColorBrush, 2f);
-            overlay.device.DrawLine(new Vector2(rect.X, rect.Y), new Vector2(rect.X + (rect.Width / 4f), rect.Y), overlay.solidColorBrush, 2f);
-            overlay.device.DrawLine(new Vector2(rect.X + rect.Width, rect.Y), new Vector2((rect.X + rect.Width) - (rect.Width / 4f), rect.Y), overlay.solidColorBrush, 2f);
-            overlay.device.DrawLine(new Vector2(rect.X + rect.Width, rect.Y), new Vector2(rect.X + rect.Width, rect.Y + (rect.Height / 4f)), overlay.solidColorBrush, 2f);
-            overlay.device.DrawLine(new Vector2(rect.X, rect.Y + rect.Height), new Vector2(rect.X, (rect.Y + rect.Height) - (rect.Height / 4f)), overlay.solidColorBrush, 2f);
-            overlay.device.DrawLine(new Vector2(rect.X, rect.Y + rect.Height), new Vector2(rect.X + (rect.Width / 4f), rect.Y + rect.Height), overlay.solidColorBrush, 2f);
-            overlay.device.DrawLine(new Vector2(rect.X + rect.Width, rect.Y + rect.Height), new Vector2(rect.X + rect.Width, (rect.Y + rect.Height) - (rect.Height / 4f)), overlay.solidColorBrush, 2f);
-            overlay.device.DrawLine(new Vector2(rect.X + rect.Width, rect.Y + rect.Height), new Vector2((rect.X + rect.Width) - (rect.Width / 4f), rect.Y + rect.Height), overlay.solidColorBrush, 2f);
+
+            overlay.device.DrawLine(new Vector2(rect.X, rect.Y), new Vector2(rect.X, rect.Y + (rect.Height / 4f)), overlay.solidColorBrush, 1f);
+            overlay.device.DrawLine(new Vector2(rect.X, rect.Y), new Vector2(rect.X + (rect.Width / 4f), rect.Y), overlay.solidColorBrush, 1f);
+            overlay.device.DrawLine(new Vector2(rect.X + rect.Width, rect.Y), new Vector2((rect.X + rect.Width) - (rect.Width / 4f), rect.Y), overlay.solidColorBrush, 1f);
+            overlay.device.DrawLine(new Vector2(rect.X + rect.Width, rect.Y), new Vector2(rect.X + rect.Width, rect.Y + (rect.Height / 4f)), overlay.solidColorBrush, 1f);
+            overlay.device.DrawLine(new Vector2(rect.X, rect.Y + rect.Height), new Vector2(rect.X, (rect.Y + rect.Height) - (rect.Height / 4f)), overlay.solidColorBrush, 1f);
+            overlay.device.DrawLine(new Vector2(rect.X, rect.Y + rect.Height), new Vector2(rect.X + (rect.Width / 4f), rect.Y + rect.Height), overlay.solidColorBrush, 1f);
+            overlay.device.DrawLine(new Vector2(rect.X + rect.Width, rect.Y + rect.Height), new Vector2(rect.X + rect.Width, (rect.Y + rect.Height) - (rect.Height / 4f)), overlay.solidColorBrush, 1f);
+            overlay.device.DrawLine(new Vector2(rect.X + rect.Width, rect.Y + rect.Height), new Vector2((rect.X + rect.Width) - (rect.Width / 4f), rect.Y + rect.Height), overlay.solidColorBrush, 1f);
         }
 
         public void DrawHealthBar(int X, int Y, int Width, int Height, int Health, int MaxHealth, bool vertical)
@@ -191,8 +191,8 @@ namespace MemHack
         {
             Rectangle rectangle;
             rectangle = new Rectangle();
-            rectangle.Width = 175;
-            rectangle.Height = 73;
+            rectangle.Width = 195;
+            rectangle.Height = 90;
             rectangle.X = (overlay.Width - 7) - rectangle.Width;
             rectangle.Y = ((730 - (!infoExpanded ? 90 : 0)) - (!radarExpanded ? 250 : 0)) - (!hackMenuExpanded ? 310 : 0);
             DrawGuiBox(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height, ref playerSearchExpanded, "Player Search");
@@ -203,6 +203,8 @@ namespace MemHack
                 DrawGuiButton((rectangle.X + rectangle.Width) - 0x16, rectangle.Y + 8, 12, 12, ref Settings.playerSearch, false);
                 DrawText("Clear", rectangle.X + 10, rectangle.Y + 20, 200, 20, false, overlay.medSmallText2, Color.LightGray);
                 DrawGuiButton((rectangle.X + rectangle.Width) - 0x16, rectangle.Y + 0x1a, 12, 12, ref overlay.clearPlayerSearch, false);
+                DrawText("Teleport", rectangle.X + 10, rectangle.Y + 67, 200, 20, false, overlay.medSmallText2, Color.LightGray);
+                DrawGuiButton((rectangle.X + rectangle.Width) - 0x16, rectangle.Y + 71, 12, 12, ref Settings.playerSearchTeleport, false);
                 GetTextBox("Search").X = rectangle.X + 10;
                 GetTextBox("Search").Y = rectangle.Y + 0x2c;
                 if (overlay.clearPlayerSearch)
@@ -370,7 +372,7 @@ namespace MemHack
             }
         }
 
-        public void DrawSkeleton(Player p)
+        public void DrawSkeleton(Player p, Color c = new Color())
         {
             Vector3D headBone = overlay.WorldToScreen(p.Skeleton.BoneHead);
             Vector3D neckBone = overlay.WorldToScreen(p.Skeleton.BoneNeck);
@@ -387,20 +389,20 @@ namespace MemHack
             Vector3D rightFootBone = overlay.WorldToScreen(p.Skeleton.BoneRightFoot);
             if (overlay.CheckVectorIsZero(headBone, neckBone, leftShoulderBone, rightShoulderBone, leftElbowRollBone, rightElbowRollBone, leftHandBone, rightHandBone, spineBone, leftKneeBone, rightKneeBone, leftFootBone, rightFootBone) && p.IsValid)
             {
-                overlay.solidColorBrush.Color = Color.Orange;
-                overlay.setBrushAlpha(0.5f);
-                overlay.device.DrawLine(new Vector2(headBone.X, headBone.Y), new Vector2(leftShoulderBone.X, leftShoulderBone.Y), overlay.solidColorBrush, 3f);
-                overlay.device.DrawLine(new Vector2(neckBone.X, neckBone.Y), new Vector2(leftShoulderBone.X, leftShoulderBone.Y), overlay.solidColorBrush, 3f);
-                overlay.device.DrawLine(new Vector2(leftShoulderBone.X, leftShoulderBone.Y), new Vector2(leftElbowRollBone.X, leftElbowRollBone.Y), overlay.solidColorBrush, 3f);
-                overlay.device.DrawLine(new Vector2(leftElbowRollBone.X, leftElbowRollBone.Y), new Vector2(leftHandBone.X, leftHandBone.Y), overlay.solidColorBrush, 3f);
-                overlay.device.DrawLine(new Vector2(neckBone.X, neckBone.Y), new Vector2(rightShoulderBone.X, rightShoulderBone.Y), overlay.solidColorBrush, 3f);
-                overlay.device.DrawLine(new Vector2(rightShoulderBone.X, rightShoulderBone.Y), new Vector2(rightElbowRollBone.X, rightElbowRollBone.Y), overlay.solidColorBrush, 3f);
-                overlay.device.DrawLine(new Vector2(rightElbowRollBone.X, rightElbowRollBone.Y), new Vector2(rightHandBone.X, rightHandBone.Y), overlay.solidColorBrush, 3f);
-                overlay.device.DrawLine(new Vector2(neckBone.X, neckBone.Y), new Vector2(spineBone.X, spineBone.Y), overlay.solidColorBrush, 3f);
-                overlay.device.DrawLine(new Vector2(spineBone.X, spineBone.Y), new Vector2(leftKneeBone.X, leftKneeBone.Y), overlay.solidColorBrush, 3f);
-                overlay.device.DrawLine(new Vector2(spineBone.X, spineBone.Y), new Vector2(rightKneeBone.X, rightKneeBone.Y), overlay.solidColorBrush, 3f);
-                overlay.device.DrawLine(new Vector2(leftKneeBone.X, leftKneeBone.Y), new Vector2(leftFootBone.X, leftFootBone.Y), overlay.solidColorBrush, 3f);
-                overlay.device.DrawLine(new Vector2(rightKneeBone.X, rightKneeBone.Y), new Vector2(rightFootBone.X, rightFootBone.Y), overlay.solidColorBrush, 3f);
+                overlay.solidColorBrush.Color = c;
+                overlay.setBrushAlpha(1.0f);
+                overlay.device.DrawLine(new Vector2(headBone.X, headBone.Y), new Vector2(neckBone.X, neckBone.Y), overlay.solidColorBrush, 1f);
+                overlay.device.DrawLine(new Vector2(neckBone.X, neckBone.Y), new Vector2(leftShoulderBone.X, leftShoulderBone.Y), overlay.solidColorBrush, 1f);
+                overlay.device.DrawLine(new Vector2(leftShoulderBone.X, leftShoulderBone.Y), new Vector2(leftElbowRollBone.X, leftElbowRollBone.Y), overlay.solidColorBrush, 1f);
+                overlay.device.DrawLine(new Vector2(leftElbowRollBone.X, leftElbowRollBone.Y), new Vector2(leftHandBone.X, leftHandBone.Y), overlay.solidColorBrush, 1f);
+                overlay.device.DrawLine(new Vector2(neckBone.X, neckBone.Y), new Vector2(rightShoulderBone.X, rightShoulderBone.Y), overlay.solidColorBrush, 1f);
+                overlay.device.DrawLine(new Vector2(rightShoulderBone.X, rightShoulderBone.Y), new Vector2(rightElbowRollBone.X, rightElbowRollBone.Y), overlay.solidColorBrush, 1f);
+                overlay.device.DrawLine(new Vector2(rightElbowRollBone.X, rightElbowRollBone.Y), new Vector2(rightHandBone.X, rightHandBone.Y), overlay.solidColorBrush, 1f);
+                overlay.device.DrawLine(new Vector2(neckBone.X, neckBone.Y), new Vector2(spineBone.X, spineBone.Y), overlay.solidColorBrush, 1f);
+                overlay.device.DrawLine(new Vector2(spineBone.X, spineBone.Y), new Vector2(leftKneeBone.X, leftKneeBone.Y), overlay.solidColorBrush, 1f);
+                overlay.device.DrawLine(new Vector2(spineBone.X, spineBone.Y), new Vector2(rightKneeBone.X, rightKneeBone.Y), overlay.solidColorBrush, 1f);
+                overlay.device.DrawLine(new Vector2(leftKneeBone.X, leftKneeBone.Y), new Vector2(leftFootBone.X, leftFootBone.Y), overlay.solidColorBrush, 1f);
+                overlay.device.DrawLine(new Vector2(rightKneeBone.X, rightKneeBone.Y), new Vector2(rightFootBone.X, rightFootBone.Y), overlay.solidColorBrush, 1f);
             }
         }
 
@@ -585,7 +587,6 @@ namespace MemHack
                 }
             }
 
-            overlay.setBrushAlpha(0.5f);
             overlay.device.DrawLine(new Vector2(aabb.corners[0].X, aabb.corners[0].Y), new Vector2(aabb.corners[1].X, aabb.corners[1].Y), overlay.solidColorBrush);
             overlay.device.DrawLine(new Vector2(aabb.corners[5].X, aabb.corners[5].Y), new Vector2(aabb.corners[6].X, aabb.corners[6].Y), overlay.solidColorBrush);
             overlay.device.DrawLine(new Vector2(aabb.corners[0].X, aabb.corners[0].Y), new Vector2(aabb.corners[5].X, aabb.corners[5].Y), overlay.solidColorBrush);

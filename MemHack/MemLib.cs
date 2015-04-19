@@ -1039,33 +1039,34 @@ namespace MemHack
         // Get Process for work
         public bool AttackProcess(string _ProcessName)
         {
-            try
-            {
-                Process[] Processes = Process.GetProcessesByName(_ProcessName);
+            Process[] Processes = Process.GetProcessesByName(_ProcessName);
 
-                if (Processes.Length > 0)
+            if (Processes.Length > 0)
+            {
+                try
                 {
                     BaseModule = Processes[0].MainModule.BaseAddress;
-                    CurProcess = Processes[0];
-                    ProcessID = Processes[0].Id;
-                    ProcessName = _ProcessName;
-                    ProcessHandle = MemLib.OpenProcess(MemLib.PROCESS_VM_READ | MemLib.PROCESS_VM_WRITE | MemLib.PROCESS_VM_OPERATION, false, ProcessID);
+                }
+                catch (Exception e)
+                {
+                    return false;
+                
+                }
+                CurProcess = Processes[0];
+                ProcessID = Processes[0].Id;
+                ProcessName = _ProcessName;
+                ProcessHandle = MemLib.OpenProcess(MemLib.PROCESS_VM_READ | MemLib.PROCESS_VM_WRITE | MemLib.PROCESS_VM_OPERATION, false, ProcessID);
 
-                    if (ProcessHandle != IntPtr.Zero)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                if (ProcessHandle != IntPtr.Zero)
+                {
+                    return true;
                 }
                 else
                 {
                     return false;
                 }
             }
-            catch
+            else
             {
                 return false;
             }

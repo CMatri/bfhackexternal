@@ -49,34 +49,46 @@ namespace MemHack
         public static bool proxWarning = true;
 
         public static bool playerSearch;
+        public static bool playerSearchTeleport;
     }
 
     public partial class Overlay
     {
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern int GetWindowThreadProcessId(IntPtr handle, out int processId);
+
         [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
         private static extern IntPtr GetForegroundWindow();
+
         [DllImport("user32.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Auto)]
         public static extern int CallNextHookEx(int idHook, int nCode, IntPtr wParam, IntPtr lParam);
+
         [DllImport("dwmapi.dll")]
         private static extern void DwmExtendFrameIntoClientArea(IntPtr hWnd, ref int[] pMargins);
+
         [DllImport("user32.dll")]
         public static extern int GetKeyState(int KeyStates);
+
         [DllImport("user32.dll", SetLastError = true)]
         private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
         [DllImport("user32.dll", SetLastError = true)]
         private static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
+
         [DllImport("user32.dll")]
         private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
         [return: MarshalAs(UnmanagedType.Bool)]
         [DllImport("user32.dll")]
         public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+
         [DllImport("user32.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Auto)]
         public static extern int SetWindowsHookEx(int idHook, Overlay.HookProc lpfn, IntPtr hInstance, int threadId);
+
         [DllImport("user32.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Auto)]
 
         public static extern bool UnhookWindowsHookEx(int idHook);
+
         private bool first;
         public bool clearPlayerSearch;
         public static bool IsRunning;
@@ -101,6 +113,7 @@ namespace MemHack
         public List<Player> spectators = new List<Player>();
         public Player LocalPlayer = new Player();
         public Player LockedOnPlayer;
+        public Player ToTeleport;
 
         private SharpDX.Direct2D1.Factory factory;
         private SharpDX.DirectWrite.Factory fontFactory;
@@ -144,6 +157,8 @@ namespace MemHack
 
         public bool UpdateStats()
         {
+           // Console.WriteLine(Mem.ReadByte(0x14285B3E8));
+
             if (!Mem.AttackProcess("bf4"))
             {
                 Console.WriteLine("Battlefield closed!");
@@ -240,7 +255,8 @@ namespace MemHack
                         Int64 SuperClimbOffset2 = Mem.ReadInt64(SuperClimbOffset1 + 0x10);
                         if (IsValidPtr(SuperClimbOffset2))
                         {
-                            Mem.WriteFloat(SuperClimbOffset2 + 0x250, Settings.UltraHax ? 300.0f : 1.5f);
+                            Mem.WriteFloat(SuperClimbOffset2 + 0x250, Settings.UltraHax ? 200.0f : 1.5f);
+                            //Console.WriteLine((SuperClimbOffset2 + 0x250).ToString("X"));
                         }
                     }
                 }
@@ -308,15 +324,15 @@ namespace MemHack
             long num31 = Mem.ReadInt64(num30 + sOffsets.WeaponFiring.PrimaryFire.ClassShotConfigData);
             if (num10 == 0)
             {
-                Mem.WriteInt32(num31 + sOffsets.WeaponFiring.PrimaryFire.ShotConfigData.NumberOfBulletsPerShot, Settings.UltraHax ? 20 : 2);
-                Mem.WriteInt32(num31 + sOffsets.WeaponFiring.PrimaryFire.ShotConfigData.NumberOfBulletsPerShell, Settings.UltraHax ? 20 : 0x4b0);
-                Mem.WriteInt32(num31 + sOffsets.WeaponFiring.PrimaryFire.ShotConfigData.NumberOfBulletsPerBurst, Settings.UltraHax ? 2 : 1);
+                Mem.WriteInt32(num31 + sOffsets.WeaponFiring.PrimaryFire.ShotConfigData.NumberOfBulletsPerShot, Settings.UltraHax ? 60 : 2);
+                Mem.WriteInt32(num31 + sOffsets.WeaponFiring.PrimaryFire.ShotConfigData.NumberOfBulletsPerShell, Settings.UltraHax ? 60 : 0x4b0);
+                Mem.WriteInt32(num31 + sOffsets.WeaponFiring.PrimaryFire.ShotConfigData.NumberOfBulletsPerBurst, Settings.UltraHax ? 60 : 1);
             }
             else if (num10 == 1)
             {
-                Mem.WriteInt32(num31 + sOffsets.WeaponFiring.PrimaryFire.ShotConfigData.NumberOfBulletsPerShot, Settings.UltraHax ? 20 : 2);
-                Mem.WriteInt32(num31 + sOffsets.WeaponFiring.PrimaryFire.ShotConfigData.NumberOfBulletsPerShell, Settings.UltraHax ? 20 : 2);
-                Mem.WriteInt32(num31 + sOffsets.WeaponFiring.PrimaryFire.ShotConfigData.NumberOfBulletsPerBurst, Settings.UltraHax ? 2 : 2);
+                Mem.WriteInt32(num31 + sOffsets.WeaponFiring.PrimaryFire.ShotConfigData.NumberOfBulletsPerShot, Settings.UltraHax ? 60 : 2);
+                Mem.WriteInt32(num31 + sOffsets.WeaponFiring.PrimaryFire.ShotConfigData.NumberOfBulletsPerShell, Settings.UltraHax ? 60 : 2);
+                Mem.WriteInt32(num31 + sOffsets.WeaponFiring.PrimaryFire.ShotConfigData.NumberOfBulletsPerBurst, Settings.UltraHax ? 60 : 2);
             }
             else if (num10 == 2)
             {
@@ -330,30 +346,42 @@ namespace MemHack
                 Mem.WriteInt32(num31 + sOffsets.WeaponFiring.PrimaryFire.ShotConfigData.NumberOfBulletsPerShell, 1);
                 Mem.WriteInt32(num31 + sOffsets.WeaponFiring.PrimaryFire.ShotConfigData.NumberOfBulletsPerBurst, 1);
             }
-            long address = Mem.ReadInt64(num12 + 0x128L);
-            if (IsValidPtr(address))
-            {
-                long num33 = Mem.ReadInt64(address + 0x10L);
-                if (IsValidPtr(num33))
-                {
-                    long num34 = Mem.ReadInt64(num33 + 0xb0L);
-                    if (IsValidPtr(address) && (num15 != 0L))
-                    {
-                        LocalPlayer.BulletGravity = 0f;
-                        LocalPlayer.BulletSpeed = 0f;
-                        LocalPlayer.BulletGravity = Mem.ReadFloat(num34 + 0x130L);
-                        LocalPlayer.BulletSpeed = Mem.ReadFloat(num33 + 0x88L);
-                        LocalPlayer.Sway.X = Mem.ReadFloat(num15 + 40L);
-                        LocalPlayer.Sway.Y = Mem.ReadFloat(num15 + 0x2cL);
 
+            if (num10 < 2)
+            {
+                long address = Mem.ReadInt64(num12 + 0x128L);
+                if (IsValidPtr(address))
+                {
+                    long num33 = Mem.ReadInt64(address + 0x10L);
+                    if (IsValidPtr(num33))
+                    {
                         if (Settings.UltraHax)
                         {
-                            Mem.WriteFloat(num34 + 0x130, 0.0f);
-                            Mem.WriteFloat(num33 + 0x88, 50000.0f);
+                            Mem.WriteFloat(num33 + 0x168 + 0x5C, 0.15f); // m_TriggerPullWeight --> 0.15 FAMAS
+                            Mem.WriteFloat(num33 + 0x168 + 0x60, 1000.000f); // m_RateOfFire
+                            Mem.WriteFloat(num33 + 0x168 + 0x64, 1000.000f); // m_RateOfFireForBurst
+                        }
+
+                        long num34 = Mem.ReadInt64(num33 + 0xb0L);
+                        if (IsValidPtr(address) && (num15 != 0L))
+                        {
+                            LocalPlayer.BulletGravity = 0f;
+                            LocalPlayer.BulletSpeed = 0f;
+                            LocalPlayer.BulletGravity = Mem.ReadFloat(num34 + 0x130L);
+                            LocalPlayer.BulletSpeed = Mem.ReadFloat(num33 + 0x88L);
+                            LocalPlayer.Sway.X = Mem.ReadFloat(num15 + 40L);
+                            LocalPlayer.Sway.Y = Mem.ReadFloat(num15 + 0x2cL);
+
+                            if (Settings.UltraHax)
+                            {
+                                Mem.WriteFloat(num34 + 0x130, 0.0f);
+                                Mem.WriteFloat(num33 + 0x88, 5000.0f);
+                            }
                         }
                     }
                 }
             }
+
             long num35 = Mem.ReadInt64(num2 + sOffsets.ClientPlayerManger.PlayerArray);
             for (int i = 0; i < 70; i++)
             {
@@ -506,6 +534,13 @@ namespace MemHack
                 aimTo = new Vector3(-200, -200, 0);
                 isAimbotting = false;
             }
+
+            if (!LocalPlayer.InVehicle/* && Settings.playerSearchTeleport && ToTeleport != null && ToTeleport.IsValid*/ && Keyboard.IsKeyDown(Keys.Q))
+            {
+                TeleportToPlayer(new Vector3D(LocalPlayer.Position.X, LocalPlayer.Position.Y + 50, LocalPlayer.Position.Z));
+            }
+            //TeleportToPlayer(new Vector3D(LocalPlayer.Position.X, 175, LocalPlayer.Position.Z));
+
             return true;
         }
 
@@ -541,9 +576,10 @@ namespace MemHack
                     vectord2 = new Vector3D(Mem.ReadFloat(num2 + 0x10L), Mem.ReadFloat(num2 + 20L), Mem.ReadFloat(num2 + 0x18L));
                     box = new AxisAlignedBox();
                     box.Init(vectord, vectord2);
-                    box.Setup(LocalPlayer.Position, LocalPlayer.SoldierTransform, true, 0f, 0f, 0f);
+                    box.Setup(LocalPlayer.Vehicle, LocalPlayer.SoldierTransform, true, 0f, 0f, 0f);
                     color2 = new SharpDX.Color();
                     guiComponents.DrawAxisAlignedBoundingBox(LocalPlayer, box, false, color2, false);
+
                     if (LocalPlayer.VehicleName.Contains("heli"))
                     {
                         color2 = new SharpDX.Color();
@@ -605,28 +641,27 @@ namespace MemHack
                         rectangle.Width = (int)num5;
                         rectangle.Height = (int)num4;
 
-                        device.StrokeWidth = 1.0f;
-
                         if (Settings.playerSearch && (player.Name.Contains(guiComponents.GetTextBox("Search").Text) && (guiComponents.GetTextBox("Search").Text.Length != 0)))
                         {
                             color = solidColorBrush.Color;
                             solidColorBrush.Color = SharpDX.Color.Pink;
                             device.DrawLine(new Vector2((Width / 2), 0f), new Vector2(vectord3.X, vectord3.Y), solidColorBrush);
                             guiComponents.DrawText("Player Found!", Width / 2 - 170 / 2, Height - 20, 300, 20, false, medSmallText2, SharpDX.Color.LightGray);
+                            ToTeleport = player;
                             solidColorBrush.Color = color;
                         }
 
                         if (!player.InVehicle)
                         {
-                            if ((((player.Team != LocalPlayer.Team) && (player.pClient != LocalPlayer.pClient)) && (Settings.ESPSkeleton && player.IsValid)) && LocalPlayer.IsValid)
+                            if ((((player.pClient != LocalPlayer.pClient)) && (Settings.ESPSkeleton && player.IsValid)) && LocalPlayer.IsValid)
                             {
                                 color = solidColorBrush.Color;
-                                guiComponents.DrawSkeleton(player);
+                                guiComponents.DrawSkeleton(player, player.Team == LocalPlayer.Team ? SharpDX.Color.LightBlue : SharpDX.Color.Orange);
                                 solidColorBrush.Color = color;
                             }
                             if (Settings.ESPHealth)
                             {
-                                guiComponents.DrawHealthBar((int)num6, (int) vectord3.Y - 5, (int)num5, 5, (int)player.Health, (int)player.MaxHealth, false);
+                                guiComponents.DrawHealthBar((int)num6, (int)vectord3.Y - 5, (int)num5, 5, (int)player.Health, (int)player.MaxHealth, false);
                             }
                             if (Settings.ESPBox)
                             {
@@ -670,15 +705,17 @@ namespace MemHack
                                 box.Setup(player.Vehicle, player.SoldierTransform, true, 0f, 0f, 0f);
                                 guiComponents.DrawAxisAlignedBoundingBox(player, box, true);
                             }
+
+                            if (Settings.ESPSkeleton)
+                            {
+                                guiComponents.DrawSkeleton(player, player.Team == LocalPlayer.Team ? SharpDX.Color.LightBlue : SharpDX.Color.Orange);
+                            }
+
                             if (player.Team != LocalPlayer.Team)
                             {
                                 if (Settings.ESPBox)
                                 {
                                     guiComponents.DrawEsp(rectangle);
-                                }
-                                if (Settings.ESPSkeleton)
-                                {
-                                    guiComponents.DrawSkeleton(player);
                                 }
                                 if (Settings.ESPHealth)
                                 {
@@ -705,11 +742,11 @@ namespace MemHack
                                     setBrushAlpha(0.5f);
                                     if (!player.IsOccluded)
                                     {
-                                        device.DrawLine(new Vector2(vectord4.X, vectord4.Y), new Vector2((Width / 2), Height), solidColorBrush, 2f);
+                                        device.DrawLine(new Vector2(vectord4.X, vectord4.Y), new Vector2((Width / 2), Height), solidColorBrush, 1f);
                                     }
                                     else if (player.IsOccluded && (player.Distance_3D <= 50f))
                                     {
-                                        device.DrawLine(new Vector2(vectord4.X, vectord4.Y), new Vector2((Width / 2), Height), solidColorBrush, 2f);
+                                        device.DrawLine(new Vector2(vectord4.X, vectord4.Y), new Vector2((Width / 2), Height), solidColorBrush, 1f);
                                     }
                                 }
                             }
@@ -784,6 +821,28 @@ namespace MemHack
             }
 
             device.EndDraw();
+        }
+
+        private void TeleportToPlayer(Player p) { TeleportToPlayer(p.Position); }
+
+        private void TeleportToPlayer(Vector3D p)
+        {
+            Int64 pVault1 = Mem.ReadInt64(LocalPlayer.pVehicle + 0x0CD0);
+            if (IsValidPtr(pVault1))
+            {
+                Int64 pVault2 = Mem.ReadInt64(pVault1 + 0x0110);
+                if (IsValidPtr(pVault2))
+                {
+                    //Console.WriteLine(Mem.ReadFloat(pVault2 + 0x0030) + " : " +
+                    //                  Mem.ReadFloat(pVault2 + 0x0034) + " : " +
+                    //                  Mem.ReadFloat(pVault2 + 0x0038));
+
+                    Mem.WriteFloat(pVault2 + 0x0030, p.X);
+                    Mem.WriteFloat(pVault2 + 0x0034, p.Y);
+                    Mem.WriteFloat(pVault2 + 0x0038, p.Z);
+                    Console.WriteLine((pVault2 + 0x0030).ToString("X"));
+                }
+            }
         }
 
         private Vector3 AimCorrection(Vector3 enemyPos, Vector3 myPos, Vector3 Velocity, Vector3 EnemyVelocity, Vector3 InVec, float Distance, float Speed, float Gravity)
